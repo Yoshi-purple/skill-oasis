@@ -1,61 +1,107 @@
 <template>
-  <div class="home">
-    <img class="home_img" alt="Vue logo" src="../assets/video-controller.jpg" />
-    <router-link to="/Signup">
-      <button class="signup-btn">新規会員登録</button>
-    </router-link>
-    <router-link to="/Login">
-      <button class="login-btn">ログイン</button>
-    </router-link>
-    <div class="ranking-items">
-      <p>コーチランキング</p>
+  <div class="container-fluid" style="height: 2160px">
+    <div class="container-fruid" style="border-radius: none">
+      <div>
+        <img
+          class="card-img px-0"
+          style="max-width: 100%; height: 720px; object-fit: cover; border-radius: none"
+          alt="Vue logo"
+          src="../assets/video-controller.jpg"
+        />
+        <p
+          class="card-img-overlay mx-auto"
+          style="top: 30%; text-align: center; color: #ffffff"
+        >
+          可能性を広げる、お手伝い。
+        </p>
+        <a
+          href="/Signup"
+          class="btn signup-btn card-img-overlay mx-auto"
+          id="signup-btn"
+          type="button"
+          to="/Signup"
+        >
+          新規会員登録 (無料)
+        </a>
+        <!-- <router-link to="/Login"> -->
+        <a
+          href="/Login"
+          class="btn login-btn card-img-overlay mx-auto"
+          id="login-btn"
+          style=""
+        >
+          ログイン
+        </a>
+        <!-- </router-link> -->
+      </div>
     </div>
-    <div class="meny-enviroment-items">
-      <p>評価件数が多いコーチ</p>
-    </div>
-    <div class="reqruit-items">
-      <p>募集カード一覧</p>
+    <!-- <div class="card mx-auto"> -->
+    <div class="container mt-5">
+      <Coachranking class="mb-3"></Coachranking>
+      <Manyevaluationscoaches class="mb-3"></Manyevaluationscoaches>
+      <Reqruitcard class="mb-3"></Reqruitcard>
+      <!-- </div> -->
     </div>
   </div>
 </template>
 
 <script>
+// import Reqruitcard from '../components/Reqruitcard.vue';
+import Coachranking from '../components/Coachranking.vue';
+import Manyevaluationscoaches from '../components/Manyevaluationscoaches.vue';
+import Reqruitcard from '../components/Reqruitcard.vue';
+
 export default {
   name: 'Home',
-  components: {},
+  components: {
+    // Reqruitcard,
+    Coachranking,
+    Manyevaluationscoaches,
+    Reqruitcard,
+  },
 };
 </script>
 <style>
-.home {
-  z-index: 1;
-  position: relative;
-  text-align: center;
-}
 .home_img {
   width: 100%;
 }
 .signup-btn {
-  position: absolute;
+  /* position: absolute; */
   width: 24em;
   top: 50%;
   left: 50%;
 }
 .login-btn {
-  position: absolute;
+  /* position: absolute; */
   width: 24em;
   top: 60%;
   left: 50%;
 }
-.ranking-items {
+.coach-items {
   background-color: #ffffff;
   margin: 30px 100px;
+  height: 270px;
 }
-.meny-enviroment-items {
-  background-color: #ffffff;
-  margin: 30px 100px;
-}
+
 .reqruit-items {
   background-color: #ffffff;
   margin: 30px 100px;
+  height: 270px;
+}
+#signup-btn {
+  background-color: #efa472;
+  color: #fff;
+  border: #efa472;
+  border-radius: 6px;
+  top: 36%;
+  height: 60px;
+}
+#login-btn {
+  background-color: #79b270;
+  color: #fff;
+  border: #79b270;
+  border-radius: 6px;
+  max-height: 60px;
+  top: 45%;
 }
 </style>

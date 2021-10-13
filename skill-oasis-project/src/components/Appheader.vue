@@ -1,14 +1,44 @@
 <template>
-  <header class="app-header">
-    <h1 class="header-title">skill oasis</h1>
-    <input type="text" style="margin: 30px 0" />
-    <button style="margin: 30px 0" class="search-btn">検索</button>
-    <span style="margin: 30px 10px" class="search-coach">コーチを探す</span>
-    <span style="margin: 30px 10px" class="reqruit-coach">コーチを募集する</span>
-    <router-link class="home-btn" to="/">
-      <button id="home-btn">HOME</button>
-    </router-link>
-  </header>
+  <nav
+    class="navbar navbar-expand-lg navbar-light sticky-top"
+    style="background-color: #303030"
+  >
+    <div class="container">
+      <a class="navbar-brand" style="color: #79b270">Skill Oasis</a>
+
+      <div class="collapse navbar-collapse">
+        <form class="d-flex">
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <div class="input-group-append"></div>
+            <a
+              class="btn input-group-append"
+              type="submit"
+              style="background-color: #79b270"
+            >
+              Search
+            </a>
+          </div>
+        </form>
+        <router-link to="Mypage">
+          <button class="btn" type="button" style="color: #ffffff">コーチを探す</button>
+        </router-link>
+        <router-link to="Makereqruitcard">
+          <div class="btn" style="color: #ffffff">コーチを募集する</div>
+        </router-link>
+      </div>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <router-link to="/">
+          <div class="btn btn-outline-light text-white">HOME</div>
+        </router-link>
+      </div>
+    </div>
+  </nav>
 </template>
 <script>
 export default {};
