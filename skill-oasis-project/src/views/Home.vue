@@ -23,7 +23,6 @@
         >
           新規会員登録 (無料)
         </a>
-        <!-- <router-link to="/Login"> -->
         <a
           href="/Login"
           class="btn login-btn card-img-overlay mx-auto"
@@ -32,10 +31,10 @@
         >
           ログイン
         </a>
-        <!-- </router-link> -->
       </div>
     </div>
     <!-- <div class="card mx-auto"> -->
+
     <div class="container mt-5">
       <Coachranking class="mb-3"></Coachranking>
       <Manyevaluationscoaches class="mb-3"></Manyevaluationscoaches>
@@ -46,7 +45,6 @@
 </template>
 
 <script>
-// import Reqruitcard from '../components/Reqruitcard.vue';
 import Coachranking from '../components/Coachranking.vue';
 import Manyevaluationscoaches from '../components/Manyevaluationscoaches.vue';
 import Reqruitcard from '../components/Reqruitcard.vue';
@@ -59,6 +57,7 @@ export default {
     Manyevaluationscoaches,
     Reqruitcard,
   },
+  methods: {},
 };
 </script>
 <style>

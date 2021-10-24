@@ -2,7 +2,7 @@
   <div class="container-fluid" style="height: 1440px">
     <div style="background-color: #79b270">
       <p class="fs-3" style="color: #ffffff; text-align: center; padding: 15px">
-        登録が完了しました。
+        登録が完了しました。ようこそ、{{ loginUser.userName }}さん。
       </p>
     </div>
     <div class="container" style="max-width: 720px; height: 873px">
@@ -69,3 +69,43 @@
     </div>
   </div>
 </template>
+<script>
+import { mapGetters } from 'vuex';
+import { Auth } from 'aws-amplify';
+import { AmplifyEventBus } from 'aws-amplify-vue';
+
+export default {
+  created() {
+    this.isUserSignedIn();
+    AmplifyEventBus.$on('authState', (info) => {
+      if (info === 'signedIn') {
+        this.isUserSignedIn();
+      } else {
+        this.signedIn = false;
+      }
+    });
+  },
+  computed: {
+    ...mapGetters(['loginUser']),
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    async isUserSignedIn() {
+      try {
+        await Auth.currentAuthenticatedUser().then((userObj) => {
+          this.signedIn = true;
+          this.$store.commit('setLoginUser', {
+            userName: userObj.username,
+            email: userObj.attributes.email,
+          });
+        });
+      } catch (err) {
+        this.signedIn = false;
+        console.log(err);
+      }
+    },
+  },
+};
+</script>

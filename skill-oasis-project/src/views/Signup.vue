@@ -8,6 +8,7 @@
             <label for="userName" class="col-sm-2 col-form-label">ユーザー名</label>
             <div class="col-sm-10">
               <input
+                v-model="userName"
                 type="text"
                 class="form-control"
                 style="background-color: #eceeec; border: none"
@@ -18,6 +19,7 @@
             >
             <div class="col-sm-10">
               <input
+                v-model="email"
                 type="text"
                 class="form-control"
                 value="email@example.com"
@@ -27,6 +29,7 @@
             <label for="inputPassword" class="col-sm-2 col-form-label">パスワード</label>
             <div class="col-sm-10">
               <input
+                v-model="password"
                 type="password"
                 class="form-control"
                 id="inputPassword"
@@ -36,25 +39,22 @@
           </div>
           <div class="row" style="margin-top: 30px">
             <div class="d-grid gap-2 col-12 mx-auto justify-content-center">
-              <router-link to="/Makeprofile">
-                <button
-                  class="btn"
-                  type="button"
-                  style="
-                    background-color: #79b270;
-                    color: #fff;
-                    border: #79b270;
-                    border-radius: 6px;
-                  "
-                >
-                  新規会員登録(無料)
-                </button>
-              </router-link>
-
-              <button class="btn btn-light" type="button">Googleでログイン</button>
-
-              <button class="btn btn-primary text-white" type="button">
-                Twitterでログイン
+              <button
+                class="btn"
+                type="button"
+                style="
+                  background-color: #79b270;
+                  color: #fff;
+                  border: #79b270;
+                  border-radius: 6px;
+                "
+                @click="signUp()"
+                @submit="signUp()"
+              >
+                新規会員登録(無料)
+              </button>
+              <button class="btn btn-light" type="button" @click="signupWithGoogle()">
+                Googleでログイン
               </button>
             </div>
           </div>
@@ -62,25 +62,81 @@
       </div>
     </div>
   </div>
-  <!-- <div class="signup">
-    <p>新規会員登録</p>
-    <div>
-      <span>ユーザーID</span>
-      <input style="border: none" type="text" />
-    </div>
-    <div>
-      <span>メールアドレス</span>
-      <input style="border: none" type="text" />
-    </div>
-    <div>
-      <span>パスワード</span>
-      <input style="border: none" type="text" />
-    </div>
-    <button>新規会員登録(無料)</button>
-  </div> -->
 </template>
 <script>
-export default {};
+import { mapGetters } from 'vuex';
+import { Auth } from 'aws-amplify';
+import { AmplifyEventBus } from 'aws-amplify-vue';
+
+export default {
+  computed: {
+    ...mapGetters(['authState', 'loginUser']),
+  },
+  created() {
+    AmplifyEventBus.$on('authState', (info) => {
+      if (info === 'signedIn') {
+        this.isUserSignedIn();
+      } else {
+        this.signedIn = false;
+      }
+    });
+  },
+  data() {
+    return {
+      userName: '',
+      email: '',
+      password: '',
+      signedIn: false,
+    };
+  },
+  methods: {
+    async isUserSignedIn() {
+      try {
+        const userObj = await Auth.currentAuthenticatedUser();
+        this.signedIn = true;
+        this.$store.commit('setLoginUser', {
+          userName: userObj.username,
+          email: userObj.attributes.email,
+        });
+        console.log(userObj);
+        console.log(this.loginUser);
+      } catch (err) {
+        this.signedIn = false;
+        console.log(err);
+      }
+    },
+    async signUp() {
+      try {
+        await Auth.signUp({
+          username: this.userName,
+          password: this.password,
+          attributes: {
+            email: this.email, // optional
+          },
+        })
+          .then((user) => {
+            this.$router.push({
+              path: '/Confirmsignup',
+              query: {
+                email: this.email,
+                username: this.userName,
+                password: this.password,
+              },
+            });
+            console.log(user);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    signupWithGoogle() {
+      Auth.federatedSignIn({ provider: 'Google' });
+    },
+  },
+};
 </script>
 <style>
 .signup {
@@ -95,15 +151,4 @@ export default {};
   /* border-right: 0px solid transparent; */
   height: 0;
 }
-
-/* h2:before {
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  width: 0;
-  height: 0;
-  content: '';
-  border-top: 10px solid #79b270;
-  border-left: 0px solid transparent;
-} */
 </style>

@@ -1,10 +1,12 @@
 <template>
-  <nav
-    class="navbar navbar-expand-lg navbar-light sticky-top"
-    style="background-color: #303030"
-  >
+  <nav class="navbar navbar-expand-lg sticky-top" style="background-color: #303030">
     <div class="container">
-      <a class="navbar-brand" style="color: #79b270">Skill Oasis</a>
+      <a v-if="!this.authState" class="navbar-brand" style="color: #79b270" href="/"
+        >Skill Oasis</a
+      >
+      <a v-if="this.authState" class="navbar-brand" style="color: #79b270" href="Mypage"
+        >Skill Oasis</a
+      >
 
       <div class="collapse navbar-collapse">
         <form class="d-flex">
@@ -25,23 +27,65 @@
             </a>
           </div>
         </form>
-        <router-link to="Mypage">
-          <button class="btn" type="button" style="color: #ffffff">コーチを探す</button>
-        </router-link>
-        <router-link to="Makereqruitcard">
-          <div class="btn" style="color: #ffffff">コーチを募集する</div>
-        </router-link>
+        <a
+          v-if="this.authState"
+          class="btn"
+          type="button"
+          style="color: #ffffff"
+          href="/Mypage"
+          >コーチを探す</a
+        >
+        <a v-if="this.authState" class="btn" style="color: #ffffff" href="Makereqruitcard"
+          >コーチを募集する</a
+        >
       </div>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <router-link to="/">
-          <div class="btn btn-outline-light text-white">HOME</div>
-        </router-link>
+        <button
+          v-if="this.authState"
+          class="btn"
+          type="button"
+          style="
+            background-color: #79b270;
+            color: #fff;
+            border: #79b270;
+            border-radius: 6px;
+          "
+          @click="signOut()"
+        >
+          ログアウト
+        </button>
+        <div class="btn btn-outline-light text-white" @click="redirectToHome()">HOME</div>
       </div>
     </div>
   </nav>
 </template>
 <script>
-export default {};
+import { Auth } from 'aws-amplify';
+import { mapState } from 'vuex';
+
+export default {
+  computed: {
+    ...mapState(['authState']),
+  },
+  methods: {
+    async signOut() {
+      try {
+        await Auth.signOut();
+        this.$store.commit('setAuthState');
+        this.$router.push('/');
+      } catch (error) {
+        console.log('error signing out: ', error);
+      }
+    },
+    redirectToHome() {
+      if (this.authState) {
+        this.$router.push('/Mypage');
+      } else {
+        this.$router.push('/');
+      }
+    },
+  },
+};
 </script>
 <style>
 .app-header {

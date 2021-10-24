@@ -13,9 +13,35 @@
 </template>
 <script>
 import Appheader from './components/Appheader.vue';
+
+import { Auth } from 'aws-amplify';
 export default {
+  created() {
+    try {
+      this.isUserSignedIn();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   components: {
     Appheader,
+  },
+  methods: {
+    async isUserSignedIn() {
+      try {
+        const userObj = await Auth.currentAuthenticatedUser();
+        this.signedIn = true;
+        this.$store.commit('setLoginUser', {
+          userName: userObj.username,
+          email: userObj.attributes.email,
+        });
+        console.log(userObj);
+      } catch (err) {
+        this.signedIn = false;
+        console.log(err);
+      }
+    },
   },
 };
 </script>

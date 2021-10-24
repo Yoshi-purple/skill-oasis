@@ -13,6 +13,7 @@ import Messageroom from '../views/Messageroom.vue';
 import Makereqruitcard from '../views/Makereqruitcard.vue';
 import Userprofile from '../views/Userprofile.vue';
 import Coachprofile from '../views/Coachprofile.vue';
+import Confirmsignup from '../views/Confirmsignup.vue';
 
 Vue.use (VueRouter);
 
@@ -81,6 +82,11 @@ const routes = [
     path: '/Coachprofile',
     name: 'Coachprofile',
     component: Coachprofile,
+  },
+  {
+    path: '/Confirmsignup',
+    name: 'Confirmsignup',
+    component: Confirmsignup,
   },
 ];
 
