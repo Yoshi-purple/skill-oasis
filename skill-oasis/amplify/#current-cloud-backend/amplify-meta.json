@@ -1,0 +1,44 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-skilloasisproject-dev-174427-authRole",
+      "UnauthRoleArn": "arn:aws:iam::730736357759:role/amplify-skilloasisproject-dev-174427-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::730736357759:role/amplify-skilloasisproject-dev-174427-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-skilloasisproject-dev-174427-deployment",
+      "UnauthRoleName": "amplify-skilloasisproject-dev-174427-unauthRole",
+      "StackName": "amplify-skilloasisproject-dev-174427",
+      "StackId": "arn:aws:cloudformation:us-east-2:730736357759:stack/amplify-skilloasisproject-dev-174427/47eca4d0-2e5d-11ec-8e68-06defb37f6f8",
+      "AmplifyAppId": "dnq9ab8poy19k"
+    }
+  },
+  "auth": {
+    "skilloasisprojectfc1d6e56": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "UserPoolId": "us-east-2_nlHfcUDer",
+        "UserPoolName": "skill-oasis-userpool",
+        "AppClientID": "upa0s43jofi25bb2a4985sm5k",
+        "AppClientIDWeb": "upa0s43jofi25bb2a4985sm5k",
+        "HostedUIDomain": "skill-0asis"
+      },
+      "frontendAuthConfig": {
+        "loginMechanisms": [
+          "PREFERRED_USERNAME"
+        ],
+        "signupAttributes": [],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": []
+        },
+        "mfaTypes": [],
+        "verificationMechanisms": []
+      },
+      "lastPushTimeStamp": "2021-10-18T18:38:25.784Z"
+    }
+  },
+  "api": {}
+}
