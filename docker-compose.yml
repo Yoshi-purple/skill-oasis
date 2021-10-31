@@ -1,0 +1,15 @@
+# @format
+
+version: "3"
+services:
+  vue-docker:
+    build:
+      context: .
+      dockerfile: skill-oasis/Dockerfile
+    ports:
+      - "4000:8080"
+    working_dir: /app
+    volumes:
+      - ./skill-oasis:/app
+    stdin_open: true
+    tty: true
