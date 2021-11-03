@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "skilloasisprojectfc1d6e56": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "api": {}
+}
