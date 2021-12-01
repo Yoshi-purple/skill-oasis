@@ -1,5 +1,7 @@
+import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
+// import {password} from '../../server/config/db.config';
 
 Vue.use (Vuex);
 
@@ -13,11 +15,17 @@ export default new Vuex.Store ({
   beforeDestroy () {
     this.unsubscribeAuth ();
   },
+  mounted: {},
   state: {
     authState: false,
     users: [],
     loginUser: {},
     userProfile: {},
+    newUser: {},
+    lessons: [],
+    recruitCards: [],
+    messages: [],
+    rooms: [],
   },
   getters: {
     authState (state) {
@@ -29,8 +37,30 @@ export default new Vuex.Store ({
     userProfile (state) {
       return state.userProfile;
     },
+    lessons (state) {
+      return state.lessons;
+    },
+    recruitCards (state) {
+      return state.recruitCards;
+    },
+    users (state) {
+      return state.users;
+    },
+    messages (state) {
+      return state.messages;
+    },
+    rooms (state) {
+      return state.rooms;
+    },
   },
   mutations: {
+    addNewUser (state, user) {
+      state.newUser = {
+        userName: user.userName,
+        email: user.email,
+        password: user.password,
+      };
+    },
     addUser (state, user) {
       state.users.push ({
         userName: user.userName,
@@ -52,13 +82,179 @@ export default new Vuex.Store ({
       }
     },
     setUserProfile (state, user) {
-      state.userProfile = {
-        profileName: user.profileName,
-        goal: user.goal,
-        introduction: user.introduction,
-      };
+      state.userProfile = user;
+    },
+    setLessons (state, lesson) {
+      state.lessons = lesson;
+    },
+    setRecruit (state, recruitCard) {
+      state.recruitCards = recruitCard;
+    },
+    setAllUsers (state, users) {
+      state.users = users;
+    },
+    setMessages (state, data) {
+      state.messages = data;
+    },
+    setRooms (state, data) {
+      state.rooms = data;
     },
   },
-  actions: {},
+  actions: {
+    getUsers({commit}) {
+      axios
+        .get ('http://localhost:3000/api/users')
+        .then (response => {
+          console.log (response.data);
+          commit ('setAllUsers', response.data);
+        })
+        .catch (error => console.log (error));
+    },
+    async addNewUser ({commit}, {userName, email, password}) {
+      const param = {
+        userName: userName,
+        email: email,
+        password: password,
+      };
+      try {
+        const newUserResult = await axios
+          .post ('http://localhost:3000/api/users', param)
+          .then (response => console.log (response.data))
+          .catch (error => console.log (error));
+        commit ('addNewUser', param);
+        commit ('setLoginUser', param);
+        console.log (newUserResult);
+      } catch (error) {
+        alert ('処理に失敗しました。');
+      }
+    },
+
+    async makeProfile ({getters}, {profileName, goal, comment, image}) {
+      const id = getters.userProfile.id;
+      try {
+        const param = {
+          profileName: profileName,
+          goal: goal,
+          comment: comment,
+          image: image,
+        };
+        axios
+          .post (`http://localhost:3000/api/users/${id}`, param)
+          .then (response => console.log (response.data))
+          .catch (error => console.log (error));
+      } catch (error) {
+        console.log (error);
+      }
+    },
+
+    async makeLesson ({getters}, {lessonTitle, image, introduce}) {
+      const id = getters.userProfile.id;
+      try {
+        const param = {
+          lessonTitle: lessonTitle,
+          introduce: introduce,
+          image: image,
+        };
+        axios
+          .post (`http://localhost:3000/api/lessons/${id}`, param)
+          .then (res => console.log (res.data))
+          .catch (err => console.log (err));
+      } catch (error) {
+        console.log (error);
+      }
+    },
+
+    getLessons({commit}) {
+      axios
+        .get ('http://localhost:3000/api/lessons')
+        .then (response => {
+          console.log (response.data);
+          commit ('setLessons', response.data);
+        })
+        .catch (error => console.log (error));
+    },
+
+    getRecruitCards({commit}) {
+      axios
+        .get ('http://localhost:3000/api/recruits')
+        .then (response => {
+          console.log (response.data);
+          commit ('setRecruit', response.data);
+        })
+        .catch (error => console.log (error));
+    },
+
+    async makeRecruitment ({getters}, {comment, title}) {
+      const id = getters.userProfile.id;
+      try {
+        const param = {
+          comment: comment,
+          title: title,
+        };
+        axios
+          .post (`http://localhost:3000/api/recruits/${id}`, param)
+          .then (res => console.log (res.data))
+          .catch (err => console.log (err));
+      } catch (error) {
+        console.log (error);
+      }
+    },
+    async sendMessage (
+      {getters},
+      {receiveUserId, comment, image01, image02, image03}
+    ) {
+      const id = getters.userProfile.id;
+      // const receiveId = receiveUserId;
+
+      try {
+        const param = {
+          receiveUserId: receiveUserId,
+          comment: comment,
+          image1: image01,
+          image2: image02,
+          image3: image03,
+        };
+        axios
+          .post (`http://localhost:3000/api/messages/${id}`, param)
+          .then (res => console.log (res.data))
+          .catch (err => console.log (err));
+        axios
+          .post (`http://localhost:3000/api/rooms/${id}`, param)
+          .then (res => console.log (res.data))
+          .catch (err => console.log (err));
+      } catch (error) {
+        console.log (error);
+      }
+    },
+
+    getMessages({getters, commit}) {
+      const id = getters.userProfile.id;
+      axios
+        .get (`http://localhost:3000/api/messages/${id}`)
+        .then (res => {
+          console.log (res.data);
+          for (let i = 0; i <= res.data.length; i++) {
+            const data = res.data;
+            console.log (
+              data[i]['sendinguser_id'],
+              data[i]['receivinguser_id']
+            );
+            commit ('setMessages', data);
+          }
+        })
+        .catch (err => console.log (err));
+    },
+
+    getRooms({getters, commit}) {
+      const id = getters.userProfile.id;
+      axios
+        .get (`http://localhost:3000/api/rooms/${id}`)
+        .then (res => {
+          commit ('setRooms', res.data);
+          console.log (res.data);
+        })
+        .catch (err => console.log (err));
+    },
+  },
   modules: {},
 });

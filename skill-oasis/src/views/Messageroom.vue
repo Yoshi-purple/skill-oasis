@@ -62,7 +62,7 @@
           </div>
           <div class="row gx-3 px-2 mt-3">
             <p
-              class="col-2 mx-auto text-center fs-5"
+              class="col-2 mx-auto text-center fs-5 text-nowrap"
               style="border-bottom: 1px solid #79b270"
             >
               ユーザーを評価
