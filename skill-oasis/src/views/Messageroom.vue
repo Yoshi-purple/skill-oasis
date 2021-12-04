@@ -5,6 +5,7 @@
         <Navbar class="col-sm"></Navbar>
         <div class="col-10">
           <Messagebar
+            class="row"
             v-for="(message, index) in messages"
             :key="index"
             :message="message"
