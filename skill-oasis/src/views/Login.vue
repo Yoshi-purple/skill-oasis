@@ -50,9 +50,9 @@
               ログイン
             </button>
 
-            <button class="btn btn-light" type="button" @click="signupWithGoogle()">
+            <!-- <button class="btn btn-light" type="button" @click="signupWithGoogle()">
               Googleでログイン
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default {
           userName: userObj.attributes.name,
           email: userObj.attributes.email,
         });
-        this.$router.push('Mypage');
+        this.$router.push({ path: '/Mypage' });
       } catch (error) {
         console.log(error);
       }

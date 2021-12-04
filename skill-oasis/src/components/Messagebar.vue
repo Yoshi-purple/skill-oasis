@@ -1,23 +1,32 @@
 <template>
   <div class="card">
-    <router-link to="Messageroom">
-      <div class="card-body">
-        <div class="row">
-          <img
-            class="img-fluid rounded-circle"
-            style="width: 30px; height: 30px; background-color: #eceeec"
-          />
-          <div class="col-8">
-            <p class="fs-5">username01</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-11" style="margin-left: 30px">message</div>
+    <!-- <router-link to="Messageroom"> -->
+    <div class="card-body" style="cursor: pointer">
+      <div class="row g-0 p-1">
+        <img
+          v-if="message.image === 'null'"
+          class="img rounded-circle"
+          style="width: 30px; height: 30px; background-color: #eceeec"
+        />
+        <img
+          class="img rounded-circle"
+          style="width: 30px; height: 30px; background-color: #eceeec"
+          :src="message.image"
+        />
+        <div class="col-8 mx-2">
+          <p class="fs-5" style="color: #79b270">{{ message.profile_name }}</p>
         </div>
       </div>
-    </router-link>
+      <div class="row g-0 p-2">
+        <div class="col-11" style="margin-left: 30px">{{ message.comment }}</div>
+      </div>
+    </div>
+    <!-- </router-link> -->
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: ['message', 'index'],
+  methods: {},
+};
 </script>

@@ -53,9 +53,9 @@
               >
                 新規会員登録(無料)
               </button>
-              <button class="btn btn-light" type="button" @click="signupWithGoogle()">
+              <!-- <button class="btn btn-light" type="button" @click="signupWithGoogle()">
                 Googleでログイン
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default {
   computed: {
     ...mapGetters(['authState', 'loginUser']),
   },
-  created() {
+  mounted() {
     AmplifyEventBus.$on('authState', (info) => {
       if (info === 'signedIn') {
         this.isUserSignedIn();
@@ -123,6 +123,11 @@ export default {
                 password: this.password,
               },
             });
+            this.$store.dispatch('addNewUser', {
+              userName: this.userName,
+              email: this.email,
+              password: this.password,
+            });
             console.log(user);
           })
           .catch((err) => {
@@ -134,15 +139,19 @@ export default {
     },
     async signupWithGoogle() {
       try {
-        const user = await Auth.federatedSignIn({ provider: 'Google' });
-        console.log(user);
+        await Auth.federatedSignIn({ provider: 'Google' });
         const userObj = await Auth.currentAuthenticatedUser();
         this.signedIn = true;
+        this.$store.dispatch('addNewUser', {
+          userName: userObj.attributes.name,
+          email: userObj.attributes.email,
+          password: null,
+        });
         this.$store.commit('setLoginUser', {
           userName: userObj.attributes.name,
           email: userObj.attributes.email,
         });
-        this.$router.push({ path: 'Makeprofile' });
+        // this.$router.push({ path: 'Makeprofile' });
       } catch (error) {
         console.log(error);
       }

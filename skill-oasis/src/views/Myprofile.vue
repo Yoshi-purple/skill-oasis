@@ -4,13 +4,14 @@
       <div class="container mt-3">
         <div class="row gx-5">
           <div class="col-4">
-            <div
-              class="row img rounded-circle"
+            <img
+              class="row img rounded-circle px-0"
               style="width: 120px; height: 120px; background-color: #ffffff"
-            ></div>
+              :src="this.userProfile.image"
+            />
           </div>
           <div class="col-6">
-            <h3 class="text-nowrap mt-3">{{ this.userProfile.profileName }}</h3>
+            <h3 class="text-nowrap mt-3">{{ this.userProfile.profile_name }}</h3>
           </div>
           <div class="col-2">
             <a class="btn text-nowrap mt-3" href="/Editprofile">編集</a>
@@ -75,11 +76,11 @@
             </div>
           </div>
           <div
-            class="tab-content"
+            class="tab-content p-1"
             id="myTabContent"
             style="background-color: #eceeec; height: 300px"
           >
-            <div>{{ this.userProfile.introduction }}</div>
+            <div>{{ this.userProfile.introduce }}</div>
           </div>
         </div>
         <div class="row gx-3 mx-auto mt-3">
@@ -104,9 +105,15 @@
 import { mapGetters } from 'vuex';
 
 export default {
+  data() {
+    return {};
+  },
   computed: {
     ...mapGetters(['userProfile']),
   },
+  mounted() {},
+
+  methods: {},
 };
 </script>
 <style>

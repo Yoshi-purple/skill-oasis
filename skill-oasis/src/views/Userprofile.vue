@@ -1,17 +1,19 @@
 <template>
   <div class="container-fluid" style="min-height: 1080px">
-    <MessageModal v-if="this.modalStatus === true" @click="closeModal"></MessageModal>
     <div class="container">
       <div class="row w-100 mt-3">
         <div class="col-lg-3 col-md-12 col-sm-12">
           <div class="card">
             <div class="card-body">
               <div class="row text-center">
-                <figure
-                  class="img-fluid rounded-circle mx-auto"
-                  style="width: 100px; height: 100px; background-color: #eceeec"
-                ></figure>
-                <p class="fs-3" style="color: #79b270">aaa</p>
+                <img
+                  class="row img rounded-circle px-0 mx-auto"
+                  style="width: 120px; height: 120px; background-color: #ffffff"
+                  :src="this.card.image"
+                />
+                <p class="text-nowrap fs-3" style="color: #79b270">
+                  {{ this.card.profile_name }}
+                </p>
               </div>
               <div class="row fs-6">
                 <p>ステータス</p>
@@ -42,7 +44,7 @@
                 <button
                   class="btn text-light"
                   style="background-color: #79b270"
-                  @click="openModal"
+                  @click="openModal(card)"
                 >
                   メッセージを送信
                 </button>
@@ -61,9 +63,17 @@
               <div class="row mx-auto">
                 <p>募集内容</p>
                 <div
-                  class="img-fluid mx-auto"
+                  class="img-fluid mx-auto p-1"
+                  style="max-width: 100%; height: 36px; background-color: #eceeec"
+                >
+                  {{ this.card.recruit_title }}
+                </div>
+                <div
+                  class="img-fluid mx-auto mt-1 p-1"
                   style="max-width: 100%; height: 200px; background-color: #eceeec"
-                ></div>
+                >
+                  {{ this.card.cardtext }}
+                </div>
               </div>
 
               <div class="row gx-3 mt-3">
@@ -78,7 +88,9 @@
                   </ul>
                 </div>
                 <div class="tab-content" id="myTabContent">
-                  <div style="background-color: #eceeec; height: 300px">自己紹介</div>
+                  <div class="p-1" style="background-color: #eceeec; height: 300px">
+                    {{ this.card.comment }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -86,6 +98,11 @@
         </div>
       </div>
     </div>
+    <MessageModal
+      v-if="this.modalStatus === true"
+      @close="closeModal"
+      :user="card"
+    ></MessageModal>
   </div>
 </template>
 <script>
@@ -97,12 +114,13 @@ export default {
   data() {
     return {
       modalStatus: false,
+      card: this.$route.query.card,
     };
   },
+  mounted() {},
   methods: {
     openModal() {
       this.modalStatus = true;
-      console.log(this.modalStatus);
     },
     closeModal() {
       this.modalStatus = false;

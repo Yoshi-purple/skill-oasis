@@ -6,11 +6,12 @@
           <div class="card">
             <div class="card-body">
               <div class="row text-center">
-                <figure
-                  class="img-fluid rounded-circle mx-auto"
-                  style="width: 100px; height: 100px; background-color: #eceeec"
-                ></figure>
-                <p class="fs-3" style="color: #79b270">aaa</p>
+                <img
+                  class="row img rounded-circle mx-auto px-0"
+                  style="width: 120px; height: 120px; background-color: #ffffff"
+                  :src="this.user.image"
+                />
+                <p class="fs-3" style="color: #79b270">{{ this.user.profile_name }}</p>
               </div>
               <div class="row fs-6">
                 <p>ステータス</p>
@@ -38,7 +39,11 @@
                 </div>
               </div>
               <div class="row mx-auto">
-                <button class="btn text-light" style="background-color: #79b270">
+                <button
+                  class="btn text-light"
+                  style="background-color: #79b270"
+                  @click="openModal"
+                >
                   メッセージを送信
                 </button>
               </div>
@@ -58,20 +63,17 @@
                 <div
                   class="gx-3 mx-auto mb-3"
                   style="max-width: 100%; height: 100px; background-color: #eceeec"
-                ></div>
+                >
+                  <div class="p-1">{{ this.lesson.lesson_title }}</div>
+                </div>
                 <div class="row text-center mx-auto"></div>
                 <div class="row g-1">
                   <div class="col-lg-6 col-md-12 col-sm-12">
-                    <figure
-                      class="col p-3 img"
+                    <img
+                      class="img"
                       style="height: 300px; background-color: #eceeec"
-                    ></figure>
-                  </div>
-                  <div class="col">
-                    <figure
-                      class="col p-3 img"
-                      style="height: 300px; background-color: #eceeec"
-                    ></figure>
+                      :src="this.lesson.image"
+                    />
                   </div>
                 </div>
               </div>
@@ -87,7 +89,9 @@
                   </ul>
                 </div>
                 <div class="tab-content" id="myTabContent">
-                  <div style="background-color: #eceeec; height: 300px">自己紹介</div>
+                  <div style="background-color: #eceeec; height: 300px" class="p-1">
+                    {{ this.lesson.lesson_detail }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -95,6 +99,41 @@
         </div>
       </div>
     </div>
+    <MessageModal
+      v-if="this.modalStatus === true"
+      @close="closeModal"
+      :user="user"
+    ></MessageModal>
   </div>
 </template>
+<script>
+import MessageModal from '../components/Messagemodal.vue';
+import { mapGetters } from 'vuex';
+export default {
+  components: {
+    MessageModal,
+  },
+  data() {
+    return {
+      lesson: this.$route.query.lesson,
+      user: this.$route.query.user[0],
+      modalStatus: false,
+    };
+  },
+  computed: {
+    ...mapGetters(['userProfile']),
+  },
+  mounted() {
+    console.log(this.lesson);
+  },
+  methods: {
+    openModal() {
+      this.modalStatus = true;
+    },
+    closeModal() {
+      this.modalStatus = false;
+    },
+  },
+};
+</script>
 <style></style>

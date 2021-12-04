@@ -2,14 +2,46 @@
 
 version: "3"
 services:
-  vue-docker:
+  app:
+    container_name: app_front_container
     build:
       context: .
-      dockerfile: skill-oasis/Dockerfile
+      dockerfile: docker/app/Dockerfile
     ports:
-      - "4000:8080"
-    working_dir: /app
+      - "8080:8080"
     volumes:
       - ./skill-oasis:/app
     stdin_open: true
     tty: true
+
+  api:
+    container_name: api_container
+    build: ./docker/api/
+    ports:
+      - 3000:3000
+    volumes:
+      - ./api:/api
+    tty: true
+    environment:
+      CHOKIDAR_USEPOLLING: 1
+      TZ: Asia/Tokyo
+    depends_on:
+      - db
+
+  db:
+    container_name: app_db_container
+    build:
+      context: .
+      dockerfile: ./docker/database/Dockerfile
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database/data:/var/lib/mysql
+      - ./database/config/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./database/sql:/docker-entrypoint-initdb.d
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: oasis_db
+      TZ: "Asia/Tokyo"

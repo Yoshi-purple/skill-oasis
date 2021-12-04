@@ -16,10 +16,19 @@
           </p>
 
           <div class="mb-3">
-            <label for="coachingTitleInputForm" class="form-label">タイトル</label>
-            <textarea class="form-control" type="text" rows="3" name="" id=""></textarea>
+            <label type="text" for="coachingTitleInputForm" class="form-label"
+              >タイトル</label
+            >
+            <textarea
+              class="form-control"
+              type="text"
+              v-model="lessonTitle"
+              rows="3"
+              name=""
+              id=""
+            ></textarea>
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <input
               type="file"
               class="form-control form-control-sm"
@@ -28,7 +37,7 @@
               aria-label="Upload"
               style="background-color: #eceeec"
             />
-          </div>
+          </div> -->
           <div class="mb-3">
             <input
               type="file"
@@ -37,14 +46,26 @@
               aria-describedby="inputGroupFileAddon04"
               aria-label="Upload"
               style="background-color: #eceeec"
+              @change="selectedFile"
             />
           </div>
           <div class="mb-3">
             <label for="coachingTitleInputForm" class="form-label">自己紹介</label>
-            <textarea class="form-control" type="text" rows="15" name="" id=""></textarea>
+            <textarea
+              class="form-control"
+              type="text"
+              v-model="coachIntroduce"
+              rows="15"
+              name=""
+              id=""
+            ></textarea>
           </div>
           <div class="d-grid gap-2 col-6 mx-auto">
-            <button class="btn btn-lg text-white" style="background-color: #79b270">
+            <button
+              class="btn btn-lg text-white"
+              style="background-color: #79b270"
+              @click="sendCoachResister()"
+            >
               作成
             </button>
           </div>
@@ -53,3 +74,45 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      lessonTitle: '',
+      coachIntroduce: '',
+      image: '',
+    };
+  },
+  methods: {
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
+    selectedFile(event) {
+      console.log(event);
+      const images = event.target.files || event.dataTransfer.files;
+      this.getBase64(images[0])
+        .then((img) => {
+          this.image = img;
+          console.log(this.image);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    async sendCoachResister() {
+      this.$store.dispatch('makeLesson', {
+        lessonTitle: this.lessonTitle,
+        introduce: this.coachIntroduce,
+        image: this.image,
+      });
+      await this.$router.push('/CoachProfile');
+    },
+  },
+};
+</script>

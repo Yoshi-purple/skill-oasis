@@ -16,11 +16,28 @@
           </p>
           <div class="row g-3">
             <div class="col-sm">
-              <img
-                class="img-fluid rounded-circle"
-                style="width: 100px; height: 100px; background-color: #eceeec"
-              />
-              <p class="fs-6">画像を設定</p>
+              <div class="row">
+                <p>
+                  <img
+                    v-if="this.avator === ''"
+                    class="img rounded-circle mx-auto px-0"
+                    style="width: 100px; height: 100px; background-color: #eceeec"
+                  />
+                  <img
+                    class="img rounded-circle mx-auto px-0"
+                    style="width: 100px; height: 100px; background-color: #eceeec"
+                    :src="avator"
+                  />
+                </p>
+              </div>
+              <div class="row">
+                <label>
+                  <span class="btn-sm btn-light" @change="selectedFile">
+                    画像を設定
+                    <input type="file" style="display: none" />
+                  </span>
+                </label>
+              </div>
             </div>
             <div class="col-sm mt-3">
               <p class="mb-0" style="text-align: left">ユーザー名</p>
@@ -44,14 +61,14 @@
           <div class="row">
             <p class="card-text-left fs-5 w-50">自己紹介</p>
             <textarea
-              v-model="selfIntroduction"
+              v-model="comment"
               class="form-control"
               style="background-color: #eceeec; border: none"
               rows="12"
             ></textarea>
           </div>
           <div class="mt-3">
-            <button
+            <span
               @click="makeProfile()"
               ref="/Myprofile"
               class="btn mx-auto"
@@ -64,7 +81,7 @@
               "
             >
               作成
-            </button>
+            </span>
           </div>
         </div>
       </div>
@@ -94,10 +111,33 @@ export default {
     return {
       profileName: '',
       goal: '',
-      selfIntroduction: '',
+      comment: '',
+      image: '',
+      avator: '',
     };
   },
   methods: {
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
+
+    selectedFile(event) {
+      console.log(event);
+      const images = event.target.files || event.dataTransfer.files;
+      this.getBase64(images[0])
+        .then((img) => {
+          this.avator = img;
+          console.log(this.avator);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     async isUserSignedIn() {
       try {
         await Auth.currentAuthenticatedUser().then((userObj) => {
@@ -113,9 +153,18 @@ export default {
     async makeProfile() {
       try {
         await this.$store.commit('setUserProfile', {
+          userName: this.loginUser.userName,
+          email: this.loginUser.email,
           profileName: this.profileName,
           goal: this.goal,
-          introduction: this.selfIntroduction,
+          comment: this.comment,
+          image: this.avator,
+        });
+        this.$store.dispatch('makeProfile', {
+          profileName: this.profileName,
+          goal: this.goal,
+          comment: this.comment,
+          image: this.avator,
         });
         this.$router.push('Myprofile');
       } catch (error) {

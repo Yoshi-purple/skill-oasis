@@ -14,19 +14,25 @@
 <script>
 import Appheader from './components/Appheader.vue';
 import { mapGetters } from 'vuex';
+import axios from 'axios';
+// import base64url from 'base64url';
 
 import { Auth } from 'aws-amplify';
 export default {
   computed: {
     ...mapGetters(['loginUser']),
   },
-  created() {
+  mounted() {
     try {
       this.isUserSignedIn();
+      this.$store.dispatch('getUsers');
+      this.$store.dispatch('getLessons');
+      this.$store.dispatch('getRecruitCards');
     } catch (error) {
       console.log(error);
     }
   },
+  created() {},
 
   components: {
     Appheader,
@@ -41,6 +47,17 @@ export default {
           email: userObj.attributes.email,
         });
         console.log(userObj);
+
+        const email = userObj.attributes.email;
+        const user = await axios
+          .get(`http://localhost:3000/api/users/${email}`)
+          .then((res) => {
+            return res.data[0];
+          })
+          .catch((err) => console.log(err));
+        console.log(user);
+        this.$store.commit('setUserProfile', user);
+        this.$store.dispatch('getRooms', user.id);
       } catch (err) {
         this.signedIn = false;
         console.log(err);

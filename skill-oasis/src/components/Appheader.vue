@@ -70,9 +70,10 @@ export default {
   methods: {
     async signOut() {
       try {
-        await Auth.signOut();
+        await Auth.signOut().then(() => {
+          this.$router.push('/');
+        });
         this.$store.commit('setAuthState');
-        this.$router.push('/');
       } catch (error) {
         console.log('error signing out: ', error);
       }

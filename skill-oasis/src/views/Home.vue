@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" style="height: 2160px">
+  <div class="container-fluid" style="height: 3840px">
     <div class="container-fruid">
       <div class="position-relative">
         <img class="img-fluid" alt="Vue logo" src="../assets/video-controller.jpg" />
