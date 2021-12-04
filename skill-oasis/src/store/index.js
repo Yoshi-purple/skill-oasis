@@ -98,6 +98,7 @@ export default new Vuex.Store ({
     },
     setRooms (state, data) {
       state.rooms = data;
+      console.log (data);
     },
   },
   actions: {
@@ -105,7 +106,6 @@ export default new Vuex.Store ({
       axios
         .get ('http://localhost:3000/api/users')
         .then (response => {
-          console.log (response.data);
           commit ('setAllUsers', response.data);
         })
         .catch (error => console.log (error));
@@ -168,7 +168,6 @@ export default new Vuex.Store ({
       axios
         .get ('http://localhost:3000/api/lessons')
         .then (response => {
-          console.log (response.data);
           commit ('setLessons', response.data);
         })
         .catch (error => console.log (error));
@@ -178,7 +177,6 @@ export default new Vuex.Store ({
       axios
         .get ('http://localhost:3000/api/recruits')
         .then (response => {
-          console.log (response.data);
           commit ('setRecruit', response.data);
         })
         .catch (error => console.log (error));
@@ -218,42 +216,54 @@ export default new Vuex.Store ({
           .post (`http://localhost:3000/api/messages/${id}`, param)
           .then (res => console.log (res.data))
           .catch (err => console.log (err));
+        // axios
+        //   .post (`http://localhost:3000/api/rooms/${id}`, param)
+        //   .then (res => console.log (res.data))
+        //   .catch (err => console.log (err));
+      } catch (error) {
+        console.log (error);
+      }
+    },
+
+    async getMessages ({getters, commit}, partnerId) {
+      const id = getters.userProfile.id;
+      try {
+        const param = {
+          partnerId: partnerId,
+        };
         axios
-          .post (`http://localhost:3000/api/rooms/${id}`, param)
-          .then (res => console.log (res.data))
+          .get (`http://localhost:3000/api/messages/${id}`, param)
+          .then (res => {
+            commit ('setMessages', res.data);
+            console.log (res.data);
+          })
           .catch (err => console.log (err));
       } catch (error) {
         console.log (error);
       }
     },
 
-    getMessages({getters, commit}) {
-      const id = getters.userProfile.id;
-      axios
-        .get (`http://localhost:3000/api/messages/${id}`)
-        .then (res => {
-          console.log (res.data);
-          for (let i = 0; i <= res.data.length; i++) {
-            const data = res.data;
-            console.log (
-              data[i]['sendinguser_id'],
-              data[i]['receivinguser_id']
-            );
-            commit ('setMessages', data);
-          }
-        })
-        .catch (err => console.log (err));
-    },
-
-    getRooms({getters, commit}) {
-      const id = getters.userProfile.id;
-      axios
-        .get (`http://localhost:3000/api/rooms/${id}`)
-        .then (res => {
-          commit ('setRooms', res.data);
-          console.log (res.data);
-        })
-        .catch (err => console.log (err));
+    async getRooms ({commit}, id) {
+      try {
+        console.log (id);
+        axios
+          .get (`http://localhost:3000/api/rooms/${id}`)
+          .then (res => {
+            const array = res.data;
+            console.log (array);
+            const users = array.filter (user => {
+              return user.id !== id;
+            });
+            const result = users.filter ((element, index, self) => {
+              return self.findIndex (e => e.id === element.id) === index;
+            });
+            console.log (result);
+            commit ('setRooms', result);
+          })
+          .catch (err => console.log (err));
+      } catch (error) {
+        console.log (error);
+      }
     },
   },
   modules: {},

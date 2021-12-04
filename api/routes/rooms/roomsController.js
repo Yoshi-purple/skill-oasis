@@ -30,8 +30,8 @@ db.query ('USE skill_oasis_project_db', (err, result) => {
 router.get ('/:id', (req, res) => {
   const id = req.params.id;
   db.query (
-    'SELECT * FROM users LEFT JOIN rooms ON users.id = rooms.senduser_id XOR rooms.receiveuser_id WHERE rooms.senduser_id XOR rooms.receiveuser_id = ? ',
-    [id],
+    'SELECT * FROM rooms LEFT OUTER JOIN users ON rooms.senduser_id = users.id || users.id = rooms.receiveuser_id WHERE rooms.senduser_id = ? OR rooms.receiveuser_id = ?',
+    [id, id],
     (err, result) => {
       if (err) throw err;
       const data = result;
@@ -55,6 +55,6 @@ router.get ('/', (req, res, next) => {
   res.send ('ROOMS!');
 });
 
-// JOIN users ON senduser_id || receiveuser_id != ?
+//SELECT * FROM rooms LEFT JOIN messages ON rooms.senduser_id = messages.sendinguser_id LEFT JOIN users ON messages.sendinguser_id || messages.receivinguser_id = users.id
 
 module.exports = router;

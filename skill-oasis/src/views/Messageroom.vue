@@ -4,46 +4,11 @@
       <div class="row w-100 mt-5">
         <Navbar class="col-sm"></Navbar>
         <div class="col-10">
-          <div class="row">
-            <div class="card-deck px-3" style="background-color: #ffffff">
-              <div class="row">
-                <div class="card">
-                  <div class="row">
-                    <div
-                      class="card-img-top rounded-circle"
-                      style="width: 30px; height: 30px; background-color: #eceeec"
-                    ></div>
-                    <!-- <router-link to="Userprofile"> -->
-                    <div class="col-8">
-                      <a class="fs-5" href="/Userprofile">username01</a>
-                    </div>
-                    <!-- </router-link> -->
-                    <div class="row">
-                      <div class="col-11" style="margin-left: 30px">message</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="card">
-                  <div class="row">
-                    <div
-                      class="card-img-top rounded-circle"
-                      style="width: 30px; height: 30px; background-color: #eceeec"
-                    ></div>
-                    <!-- <router-link to="Userprofile"> -->
-                    <div class="col-8">
-                      <a class="fs-5" href="/Userprofile">username01</a>
-                    </div>
-                    <!-- </router-link> -->
-                    <div class="row">
-                      <div class="col-11" style="margin-left: 30px">message</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Messagebar
+            v-for="(message, index) in messages"
+            :key="index"
+            :message="message"
+          ></Messagebar>
 
           <div class="row mt-3">
             <textarea
@@ -75,9 +40,15 @@
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import Messagebar from '../components/Messagebar.vue';
+import { mapGetters } from 'vuex';
 export default {
+  computed: {
+    ...mapGetters(['messages']),
+  },
   components: {
     Navbar,
+    Messagebar,
   },
   methods: {},
 };

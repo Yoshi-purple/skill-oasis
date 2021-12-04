@@ -49,14 +49,15 @@ export default {
         console.log(userObj);
 
         const email = userObj.attributes.email;
-        axios
+        const user = await axios
           .get(`http://localhost:3000/api/users/${email}`)
           .then((res) => {
-            const user = res.data[0];
-            console.log(user);
-            this.$store.commit('setUserProfile', user);
+            return res.data[0];
           })
           .catch((err) => console.log(err));
+        console.log(user);
+        this.$store.commit('setUserProfile', user);
+        this.$store.dispatch('getRooms', user.id);
       } catch (err) {
         this.signedIn = false;
         console.log(err);

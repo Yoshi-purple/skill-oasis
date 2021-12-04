@@ -27,14 +27,15 @@ db.query ('USE skill_oasis_project_db', (err, result) => {
 });
 
 //全てのメッセージを取得
-router.get ('/', (req, res) => {
-  db.query ('SELECT * FROM messages ', (err, result) => {
-    if (err) throw err;
-    const data = result;
-    res.send (data);
-    console.log (data);
-  });
-});
+// router.get ('/', (req, res) => {
+//   db.query ('SELECT * FROM messages ', (err, result) => {
+//     if (err) throw err;
+//     const data = result;
+//     res.send (data);
+//     console.log (data);
+//   });
+// });
+
 //メッセージを新規作成
 const sendMessageSql =
   'INSERT INTO messages (sendinguser_id,receivinguser_id,comment,image1,image2,image3) VALUES (?,?,?,?,?,?)';
@@ -60,9 +61,10 @@ router.post ('/:id', (req, res) => {
 //Idが一致するメッセージを取得
 router.get ('/:id', (req, res) => {
   const id = req.params.id;
+  const partnerId = req.body.partnerId;
   db.query (
-    'SELECT * FROM messages e JOIN users d ON e.sendinguser_id = d.id WHERE sendinguser_id XOR receivinguser_id = ?',
-    [id, id, id],
+    'SELECT * FROM messages LEFT JOIN users ON messages.sendinguser_id = users.id  WHERE sendinguser_id = ? OR sendinguser_id = ? ',
+    [id, partnerId],
     (err, result) => {
       if (err) throw err;
       const data = result;
