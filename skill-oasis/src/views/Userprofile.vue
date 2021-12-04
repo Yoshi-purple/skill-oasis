@@ -117,9 +117,7 @@ export default {
       card: this.$route.query.card,
     };
   },
-  mounted() {
-    console.log(this.card);
-  },
+  mounted() {},
   methods: {
     openModal() {
       this.modalStatus = true;

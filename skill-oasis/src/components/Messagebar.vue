@@ -4,6 +4,11 @@
     <div class="card-body" style="cursor: pointer">
       <div class="row g-0 p-1">
         <img
+          v-if="message.image === 'null'"
+          class="img rounded-circle"
+          style="width: 30px; height: 30px; background-color: #eceeec"
+        />
+        <img
           class="img rounded-circle"
           style="width: 30px; height: 30px; background-color: #eceeec"
           :src="message.image"

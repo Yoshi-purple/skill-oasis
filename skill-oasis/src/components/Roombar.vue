@@ -1,8 +1,13 @@
 <template>
   <div class="card">
     <!-- <router-link to="Messageroom"> -->
-    <div class="card-body" @click="showRoom(room.id)" style="cursor: pointer">
+    <div class="card-body" @click="showRoom(room)" style="cursor: pointer">
       <div class="row g-0 p-1">
+        <img
+          v-if="room.image === ''"
+          class="img rounded-circle"
+          style="width: 30px; height: 30px; background-color: #eceeec"
+        />
         <img
           class="img rounded-circle"
           style="width: 30px; height: 30px; background-color: #eceeec"
@@ -23,11 +28,11 @@
 export default {
   props: ['message', 'index', 'room'],
   methods: {
-    showRoom(id) {
+    showRoom(user) {
       try {
-        console.log(id);
-        this.$store.dispatch('getMessages', id);
-        this.$router.push('Messageroom');
+        console.log(user);
+        this.$store.dispatch('getMessages', user.id);
+        this.$router.push({ path: 'Messageroom', query: { user: user } });
       } catch (error) {
         console.log(error);
       }

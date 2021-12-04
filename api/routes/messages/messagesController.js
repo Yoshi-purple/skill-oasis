@@ -59,12 +59,12 @@ router.post ('/:id', (req, res) => {
 });
 
 //Idが一致するメッセージを取得
-router.get ('/:id', (req, res) => {
-  const id = req.params.id;
-  const partnerId = req.body.partnerId;
+router.get ('/:myId/:msgPartnerId', (req, res) => {
+  const myId = req.params.myId;
+  const partnerId = req.params.msgPartnerId;
   db.query (
-    'SELECT * FROM messages LEFT JOIN users ON messages.sendinguser_id = users.id  WHERE sendinguser_id = ? OR sendinguser_id = ? ',
-    [id, partnerId],
+    'SELECT * FROM messages JOIN users ON messages.sendinguser_id = users.id  WHERE sendinguser_id in (?,?) AND receivinguser_id in (?,?) ORDER BY messages.id DESC',
+    [myId, partnerId, myId, partnerId],
     (err, result) => {
       if (err) throw err;
       const data = result;

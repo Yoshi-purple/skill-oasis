@@ -15,12 +15,14 @@
               class="form-control"
               style="background-color: #ffffff; border: none"
               rows="12"
+              v-model="message"
             ></textarea>
           </div>
           <div class="row gx-3 px-2 mt-5">
             <div
               class="col-6 btn mx-auto"
               style="background-color: #79b270; color: #ffffff"
+              @click="sendMessage"
             >
               送信
             </div>
@@ -43,6 +45,12 @@ import Navbar from '../components/Navbar.vue';
 import Messagebar from '../components/Messagebar.vue';
 import { mapGetters } from 'vuex';
 export default {
+  data() {
+    return {
+      message: '',
+      user: this.$route.query.user,
+    };
+  },
   computed: {
     ...mapGetters(['messages']),
   },
@@ -50,6 +58,19 @@ export default {
     Navbar,
     Messagebar,
   },
-  methods: {},
+  methods: {
+    async sendMessage() {
+      const myId = this.$store.getters.userProfile.id;
+      const id = this.user.id;
+      const message = this.message;
+      this.$store.dispatch('sendMessage', {
+        receiveUserId: this.user.id,
+        comment: message,
+      });
+      console.log(id);
+      console.log(message);
+      console.log(myId);
+    },
+  },
 };
 </script>

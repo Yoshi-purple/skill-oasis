@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     async sendMessage() {
-      await this.$router.push('/Messageroom');
+      await this.$router.push('/Messagebox');
       const myId = this.$store.getters.userProfile.id;
       const id = this.user.id;
       const message = this.message;

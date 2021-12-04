@@ -226,16 +226,18 @@ export default new Vuex.Store ({
     },
 
     async getMessages ({getters, commit}, partnerId) {
-      const id = getters.userProfile.id;
+      const myId = getters.userProfile.id;
+      const msgPartnerId = partnerId;
       try {
-        const param = {
-          partnerId: partnerId,
-        };
+        // const param = {
+        //   partnerId: partnerId,
+        // };
         axios
-          .get (`http://localhost:3000/api/messages/${id}`, param)
+          .get (`http://localhost:3000/api/messages/${myId}/${msgPartnerId}`)
           .then (res => {
             commit ('setMessages', res.data);
             console.log (res.data);
+            console.log (msgPartnerId);
           })
           .catch (err => console.log (err));
       } catch (error) {
