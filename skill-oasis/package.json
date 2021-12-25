@@ -20,6 +20,7 @@
 		"core-js": "^3.6.5",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
+		"firebase": "^9.6.1",
 		"mysql": "^2.18.1",
 		"mysql-client": "^0.3.0",
 		"nodemon": "^2.0.14",

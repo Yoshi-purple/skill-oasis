@@ -65,22 +65,13 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { Auth } from 'aws-amplify';
-import { AmplifyEventBus } from 'aws-amplify-vue';
 
 export default {
+  name: 'signup',
   computed: {
     ...mapGetters(['authState', 'loginUser']),
   },
-  mounted() {
-    AmplifyEventBus.$on('authState', (info) => {
-      if (info === 'signedIn') {
-        this.isUserSignedIn();
-      } else {
-        this.signedIn = false;
-      }
-    });
-  },
+  mounted() {},
   data() {
     return {
       userName: '',
@@ -90,70 +81,19 @@ export default {
     };
   },
   methods: {
-    async isUserSignedIn() {
-      try {
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
-        this.$store.commit('setLoginUser', {
-          userName: userObj.username,
-          email: userObj.attributes.email,
-        });
-        console.log(userObj);
-        console.log(this.loginUser);
-      } catch (err) {
-        this.signedIn = false;
-        console.log(err);
-      }
-    },
-    async signUp() {
-      try {
-        await Auth.signUp({
-          username: this.userName,
-          password: this.password,
-          attributes: {
-            email: this.email, // optional
-          },
-        })
-          .then((user) => {
-            this.$router.push({
-              path: '/Confirmsignup',
-              query: {
-                email: this.email,
-                username: this.userName,
-                password: this.password,
-              },
-            });
-            this.$store.dispatch('addNewUser', {
-              userName: this.userName,
-              email: this.email,
-              password: this.password,
-            });
-            console.log(user);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async signupWithGoogle() {
-      try {
-        await Auth.federatedSignIn({ provider: 'Google' });
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
+    signUp() {
+      if (this.email === '' || this.password === '' || this.userName === '') {
+        alert('ユーザー情報を全て入力してください');
+      } else {
         this.$store.dispatch('addNewUser', {
-          userName: userObj.attributes.name,
-          email: userObj.attributes.email,
-          password: null,
+          name: this.userName,
+          email: this.email,
+          password: this.password,
         });
-        this.$store.commit('setLoginUser', {
-          userName: userObj.attributes.name,
-          email: userObj.attributes.email,
-        });
-        // this.$router.push({ path: 'Makeprofile' });
-      } catch (error) {
-        console.log(error);
+        // await this.$router.push('/Confirmsignup'); //ページ推移
+        // this.userName = '';
+        // this.email = '';
+        // this.password = '';
       }
     },
   },

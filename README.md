@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # skill-oasis
 
 ## Project build
@@ -10,10 +12,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-## Into api_container
+## migration
 ```
-docker exec -it api_container sh
-yarn nodemon
+db-migrate up
 ```
-
-

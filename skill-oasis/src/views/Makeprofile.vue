@@ -24,6 +24,7 @@
                     style="width: 100px; height: 100px; background-color: #eceeec"
                   />
                   <img
+                    v-if="this.avator !== ''"
                     class="img rounded-circle mx-auto px-0"
                     style="width: 100px; height: 100px; background-color: #eceeec"
                     :src="avator"
@@ -90,20 +91,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { Auth } from 'aws-amplify';
-import { AmplifyEventBus } from 'aws-amplify-vue';
 
 export default {
-  created() {
-    this.isUserSignedIn();
-    AmplifyEventBus.$on('authState', (info) => {
-      if (info === 'signedIn') {
-        this.isUserSignedIn();
-      } else {
-        this.signedIn = false;
-      }
-    });
-  },
+  created() {},
   computed: {
     ...mapGetters(['loginUser']),
   },
@@ -137,18 +127,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    async isUserSignedIn() {
-      try {
-        await Auth.currentAuthenticatedUser().then((userObj) => {
-          this.signedIn = true;
-          console.log(userObj);
-        });
-      } catch (err) {
-        this.signedIn = false;
-        console.log(err);
-        this.$router.push('/');
-      }
     },
     async makeProfile() {
       try {

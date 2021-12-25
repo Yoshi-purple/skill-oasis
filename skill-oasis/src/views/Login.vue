@@ -60,8 +60,6 @@
   </div>
 </template>
 <script>
-import { Auth } from 'aws-amplify';
-import { AmplifyEventBus } from 'aws-amplify-vue';
 export default {
   data() {
     return {
@@ -69,55 +67,14 @@ export default {
       password: '',
     };
   },
-  created() {
-    this.isUserSignedIn();
-    AmplifyEventBus.$on('authState', (info) => {
-      if (info === 'signedIn') {
-        this.isUserSignedIn();
-      } else {
-        this.signedIn = false;
-      }
-    });
-  },
+  created() {},
   computed: {},
   methods: {
-    async isUserSignedIn() {
-      try {
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
-        this.$store.commit('setLoginUser', {
-          userName: userObj.username,
-          email: userObj.attributes.email,
-        });
-      } catch (err) {
-        this.signedIn = false;
-        console.log(err);
-      }
-    },
-    async signIn() {
-      try {
-        await Auth.signIn(this.email, this.password);
-        this.isUserSignedIn();
-        this.$router.push('Mypage');
-        this.$store.commit('setAuthState');
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async signupWithGoogle() {
-      try {
-        const user = await Auth.federatedSignIn({ provider: 'Google' });
-        console.log(user);
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
-        this.$store.commit('setLoginUser', {
-          userName: userObj.attributes.name,
-          email: userObj.attributes.email,
-        });
-        this.$router.push({ path: '/Mypage' });
-      } catch (error) {
-        console.log(error);
-      }
+    signIn() {
+      this.$store.dispatch('logIn', {
+        email: this.email,
+        password: this.password,
+      });
     },
   },
 };

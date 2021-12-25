@@ -60,7 +60,6 @@
   </nav>
 </template>
 <script>
-import { Auth } from 'aws-amplify';
 import { mapState } from 'vuex';
 
 export default {
@@ -70,12 +69,10 @@ export default {
   methods: {
     async signOut() {
       try {
-        await Auth.signOut().then(() => {
-          this.$router.push('/');
-        });
+        this.$store.dispatch('signOut');
         this.$store.commit('setAuthState');
       } catch (error) {
-        console.log('error signing out: ', error);
+        console.log(error);
       }
     },
     redirectToHome() {

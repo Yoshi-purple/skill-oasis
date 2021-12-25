@@ -8,7 +8,7 @@
               <div class="row text-center">
                 <img
                   class="row img rounded-circle px-0 mx-auto"
-                  style="width: 120px; height: 120px; background-color: #ffffff"
+                  style="width: 120px; height: 120px; background-color: #ffffff;"
                   :src="this.card.image"
                 />
                 <p class="text-nowrap fs-3" style="color: #79b270">
@@ -24,7 +24,10 @@
                     class="border"
                     style="background-color: #eceeec; text-align: center"
                   >
-                    <p>マッチング数:0<br />評価平均:4.6</p>
+                    <p>
+                      マッチング数:{{ this.card.matching_number_of_times
+                      }}<br />評価平均:4.6
+                    </p>
                   </div>
                 </div>
               </div>
@@ -89,7 +92,7 @@
                 </div>
                 <div class="tab-content" id="myTabContent">
                   <div class="p-1" style="background-color: #eceeec; height: 300px">
-                    {{ this.card.comment }}
+                    {{ this.card.introduce }}
                   </div>
                 </div>
               </div>

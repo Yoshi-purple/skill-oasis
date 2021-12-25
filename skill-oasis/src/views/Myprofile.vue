@@ -6,7 +6,12 @@
           <div class="col-4">
             <img
               class="row img rounded-circle px-0"
-              style="width: 120px; height: 120px; background-color: #ffffff"
+              style="
+                width: 130px;
+                height: 130px;
+                background-color: #ffffff;
+                border: solid 6px #eceeec;
+              "
               :src="this.userProfile.image"
             />
           </div>
@@ -19,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="container mt-3">
+    <div class="container">
       <div class="row col-lg-6 col-md-12 col-sm-12">
         <div class="card mt-5" style="padding: 10px 15px; background-color: #ffffff">
           <div class="row gx-3 fs-5 px-4">ステータス</div>
@@ -29,7 +34,8 @@
                 class="p-3 border fs-5 text-nowrap mx-auto"
                 style="background-color: #eceeec; text-align: center"
               >
-                マッチング数:0<br />評価平均:4.6
+                マッチング数:{{ this.userProfile.matching_number_of_times
+                }}<br />評価平均:4.6
               </div>
             </div>
             <div class="col col-lg-4 col-md-6 col-sm-12">

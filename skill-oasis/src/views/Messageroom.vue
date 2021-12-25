@@ -4,12 +4,13 @@
       <div class="row w-100 mt-5">
         <Navbar class="col-sm"></Navbar>
         <div class="col-10">
-          <Messagebar
-            class="row"
-            v-for="(message, index) in messages"
-            :key="index"
-            :message="message"
-          ></Messagebar>
+          <div class="message-group row">
+            <Messagebar
+              v-for="(message, index) in messages"
+              :key="index"
+              :message="message"
+            ></Messagebar>
+          </div>
 
           <div class="row mt-3">
             <textarea
@@ -59,19 +60,27 @@ export default {
     Navbar,
     Messagebar,
   },
+  mounted() {
+    // const id = this.user.id;
+    // this.$store.dispatch('getMessages', id);
+  },
   methods: {
     async sendMessage() {
-      const myId = this.$store.getters.userProfile.id;
-      const id = this.user.id;
       const message = this.message;
       this.$store.dispatch('sendMessage', {
         receiveUserId: this.user.id,
         comment: message,
       });
-      console.log(id);
-      console.log(message);
-      console.log(myId);
+      this.message = '';
     },
   },
 };
 </script>
+<style>
+.message-group {
+  max-height: 600px;
+  margin-bottom: 10px;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+</style>

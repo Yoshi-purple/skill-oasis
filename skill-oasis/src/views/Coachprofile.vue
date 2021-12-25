@@ -22,7 +22,10 @@
                     class="border"
                     style="background-color: #eceeec; text-align: center"
                   >
-                    <p>マッチング数:0<br />評価平均:4.6</p>
+                    <p>
+                      マッチング数:{{ this.user.matching_number_of_times
+                      }}<br />評価平均:4.6
+                    </p>
                   </div>
                 </div>
               </div>
