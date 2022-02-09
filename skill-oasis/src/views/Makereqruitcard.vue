@@ -51,11 +51,16 @@ export default {
   },
   methods: {
     makeRecruitCard() {
-      console.log(this.comment);
-      this.$store.dispatch('makeRecruitment', {
-        comment: this.comment,
-        title: this.title,
-      });
+      try {
+        console.log(this.comment);
+        this.$store.dispatch('makeRecruitment', {
+          comment: this.comment,
+          title: this.title,
+        });
+        this.$router.push('/Myprofile');
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

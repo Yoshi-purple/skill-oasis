@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" style="height: 3840px">
+  <div class="container-fluid">
     <div class="container-fruid">
       <div class="position-relative">
         <img class="img-fluid" alt="Vue logo" src="../assets/video-controller.jpg" />
@@ -7,35 +7,77 @@
           <p class="fs-3" style="color: #ffffff">可能性を広げる、お手伝い。</p>
         </div>
         <div class="position-absolute img-caption text-center">
-          <a href="/Signup" class="btn signup-btn" id="signup-btn" to="/Signup">
+          <a href="/Signup" class="btn signup-btn p-3" id="signup-btn">
             新規会員登録 (無料)
           </a>
-          <a href="/Login" class="btn login-btn" id="login-btn" style=""> ログイン </a>
+          <a href="/Login" class="btn login-btn p-3" id="login-btn"> ログイン </a>
         </div>
       </div>
     </div>
 
     <div class="container mt-5">
-      <Coachranking class="mb-3"></Coachranking>
-      <Manyevaluationscoaches class="mb-3"></Manyevaluationscoaches>
-      <Reqruitcard class="mb-3"></Reqruitcard>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#popular">人気</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#new" @click="getNewLessons()"
+            >新着</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#recruit" @click="getRecruits()"
+            >募集</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#search">レッスンを検索</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="popular">
+          <Coachranking class="row"></Coachranking>
+        </div>
+        <div class="tab-pane" id="new">
+          <Newlessons class="row"></Newlessons>
+        </div>
+        <div class="tab-pane" id="recruit">
+          <Reqruitcard class="row"></Reqruitcard>
+        </div>
+        <div class="tab-pane" id="search">
+          <Searchlessons class="row"></Searchlessons>
+        </div>
+      </div>
     </div>
+    <footer></footer>
   </div>
 </template>
 
 <script>
 import Coachranking from '../components/Coachranking.vue';
-import Manyevaluationscoaches from '../components/Manyevaluationscoaches.vue';
+import Newlessons from '../components/Newlessons.vue';
 import Reqruitcard from '../components/Reqruitcard.vue';
+import Searchlessons from '../components/Searchlessons.vue';
 
 export default {
   name: 'Home',
   components: {
     Coachranking,
-    Manyevaluationscoaches,
+    Newlessons,
     Reqruitcard,
+    Searchlessons,
   },
-  methods: {},
+  methods: {
+    signInWithGoogle() {
+      this.$store.dispatch('signInWithGoogle');
+    },
+    getNewLessons() {
+      this.$store.dispatch('getNewLessons');
+    },
+    getRecruits() {
+      this.$store.dispatch('getRecruits');
+    },
+  },
 };
 </script>
 <style>

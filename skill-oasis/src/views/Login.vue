@@ -1,58 +1,73 @@
 <template>
-  <div class="container-fruid" style="height: 1440px">
+  <div class="container-fruid" style="min-height: 700px">
     <div
-      class="card d-flex mx-auto"
+      class="card px-3"
       style="
         margin-top: 100px;
         margin-bottom: 100px;
-        max-width: 650px;
+        max-width: 450px;
         background-color: #ffffff;
       "
     >
-      <div id="login-tag">ログイン</div>
-
-      <div class="mb-3 row" style="text-align: center">
-        <div class="row" style="margin-top: 60px">
-          <label for="staticEmail" class="col-sm-2 col-form-label">メールアドレス</label>
-          <div class="col-sm-10">
-            <input
-              v-model="email"
-              type="text"
-              class="form-control"
-              value="email@example.com"
-              style="background-color: #eceeec; border: none"
-            />
-          </div>
-          <label for="inputPassword" class="col-sm-2 col-form-label">パスワード</label>
-          <div class="col-sm-10">
-            <input
-              v-model="password"
-              type="password"
-              class="form-control"
-              id="inputPassword"
-              style="background-color: #eceeec; border: none"
-            />
-          </div>
-        </div>
-        <div class="row" style="margin-top: 30px">
-          <div class="d-grid gap-2 col-12 mx-auto justify-content-center">
-            <button
-              class="btn"
-              type="button"
-              style="
-                background-color: #79b270;
-                color: #fff;
-                border: #79b270;
-                border-radius: 6px;
-              "
-              @click="signIn()"
+      <div class="card-body">
+        <div class="mb-3 row">
+          <p
+            class="card-title text-center fs-3"
+            style="color: #79b270; font-weight: bold"
+          >
+            ログイン
+          </p>
+          <div class="row mt-3">
+            <label for="staticEmail" class="col-lg-12 col-form-label text-nowrap"
+              >メールアドレス</label
             >
-              ログイン
-            </button>
+            <div class="col-12">
+              <input
+                v-model="email"
+                type="text"
+                class="form-control"
+                value="email@example.com"
+                style="background-color: #eceeec; border: none"
+              />
+            </div>
+          </div>
+          <div class="row mt-3 mx-auto">
+            <div class="d-grid gap-2 justify-content-center">
+              <button
+                class="btn p-3"
+                type="button"
+                style="
+                  background-color: #79b270;
+                  color: #fff;
+                  border: #79b270;
+                  border-radius: 6px;
+                "
+                @click="signIn()"
+              >
+                <a> 認証メールを受け取る </a>
+              </button>
 
-            <!-- <button class="btn btn-light" type="button" @click="signupWithGoogle()">
-              Googleでログイン
-            </button> -->
+              <button
+                class="btn p-3 btn-secondary"
+                type="button"
+                @click="signInWithGoogle()"
+              >
+                <a>
+                  <svg
+                    fill="#fff"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24px"
+                    height="24px"
+                  >
+                    <path
+                      d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032 s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2 C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
+                    />
+                  </svg>
+                  Googleでログイン
+                </a>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -60,8 +75,6 @@
   </div>
 </template>
 <script>
-import { Auth } from 'aws-amplify';
-import { AmplifyEventBus } from 'aws-amplify-vue';
 export default {
   data() {
     return {
@@ -69,52 +82,19 @@ export default {
       password: '',
     };
   },
-  created() {
-    this.isUserSignedIn();
-    AmplifyEventBus.$on('authState', (info) => {
-      if (info === 'signedIn') {
-        this.isUserSignedIn();
-      } else {
-        this.signedIn = false;
-      }
-    });
-  },
   computed: {},
+
   methods: {
-    async isUserSignedIn() {
-      try {
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
-        this.$store.commit('setLoginUser', {
-          userName: userObj.username,
-          email: userObj.attributes.email,
-        });
-      } catch (err) {
-        this.signedIn = false;
-        console.log(err);
-      }
+    signIn() {
+      this.$store.dispatch('logIn', {
+        email: this.email,
+        password: this.password,
+      });
     },
-    async signIn() {
+    async signInWithGoogle() {
       try {
-        await Auth.signIn(this.email, this.password);
-        this.isUserSignedIn();
-        this.$router.push('Mypage');
-        this.$store.commit('setAuthState');
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async signupWithGoogle() {
-      try {
-        const user = await Auth.federatedSignIn({ provider: 'Google' });
-        console.log(user);
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
-        this.$store.commit('setLoginUser', {
-          userName: userObj.attributes.name,
-          email: userObj.attributes.email,
-        });
-        this.$router.push({ path: '/Mypage' });
+        await this.$store.dispatch('signInWithGoogle');
+        // this.$router.push('/Mypage');
       } catch (error) {
         console.log(error);
       }
@@ -128,13 +108,5 @@ export default {
   color: #fff;
   border: #79b270;
   border-radius: 6px;
-}
-#login-tag {
-  width: 200px;
-  color: #ffffff;
-  text-align: center;
-  border-bottom: 30px solid #79b270;
-  /* border-right: 0px solid transparent; */
-  height: 0;
 }
 </style>

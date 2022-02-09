@@ -5,7 +5,7 @@
         培った知識やスキルを共有しましょう！
       </p>
     </div>
-    <div class="container" style="max-width: 720px; height: 873px">
+    <div class="container" style="max-width: 720px; height: auto">
       <div class="card mt-3">
         <div class="card-body" style="padding: 1rem 3rem">
           <p
@@ -48,6 +48,9 @@
               style="background-color: #eceeec"
               @change="selectedFile"
             />
+            <div class="row mt-3">
+              <img :src="this.image" />
+            </div>
           </div>
           <div class="mb-3">
             <label for="coachingTitleInputForm" class="form-label">自己紹介</label>
@@ -105,13 +108,18 @@ export default {
         });
     },
 
-    async sendCoachResister() {
-      this.$store.dispatch('makeLesson', {
-        lessonTitle: this.lessonTitle,
-        introduce: this.coachIntroduce,
-        image: this.image,
-      });
-      await this.$router.push('/CoachProfile');
+    sendCoachResister() {
+      try {
+        this.$store.dispatch('makeLesson', {
+          lessonTitle: this.lessonTitle,
+          introduce: this.coachIntroduce,
+          image: this.image,
+        });
+        this.$router.push('/Myprofile');
+        console.log(this.lessonTitle);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

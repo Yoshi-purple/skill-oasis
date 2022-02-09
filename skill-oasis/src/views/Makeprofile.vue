@@ -2,7 +2,7 @@
   <div class="container-fluid" style="height: 1440px">
     <div style="background-color: #79b270">
       <p class="fs-3" style="color: #ffffff; text-align: center; padding: 15px">
-        登録が完了しました。ようこそ、{{ loginUser.userName }}さん。
+        登録が完了しました。ようこそ、{{ loginUser.username }}さん。
       </p>
     </div>
     <div class="container" style="max-width: 720px; height: 873px">
@@ -24,6 +24,7 @@
                     style="width: 100px; height: 100px; background-color: #eceeec"
                   />
                   <img
+                    v-if="this.avator !== ''"
                     class="img rounded-circle mx-auto px-0"
                     style="width: 100px; height: 100px; background-color: #eceeec"
                     :src="avator"
@@ -46,7 +47,7 @@
                 type="text"
                 class="form-control mb-3"
                 style="background-color: #eceeec; border: none"
-                placeholder="例:あんぱん食べたい人"
+                placeholder="例:gamer01"
               />
               <p class="mb-0" style="text-align: left">目標</p>
               <input
@@ -54,7 +55,7 @@
                 type="text"
                 class="form-control"
                 style="background-color: #eceeec; border: none"
-                placeholder="例:大会に出れるレベルまで行きたいです"
+                placeholder="例:上手くなって配信したい"
               />
             </div>
           </div>
@@ -90,20 +91,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { Auth } from 'aws-amplify';
-import { AmplifyEventBus } from 'aws-amplify-vue';
 
 export default {
-  created() {
-    this.isUserSignedIn();
-    AmplifyEventBus.$on('authState', (info) => {
-      if (info === 'signedIn') {
-        this.isUserSignedIn();
-      } else {
-        this.signedIn = false;
-      }
-    });
-  },
+  created() {},
   computed: {
     ...mapGetters(['loginUser']),
   },
@@ -138,35 +128,15 @@ export default {
           console.log(err);
         });
     },
-    async isUserSignedIn() {
-      try {
-        await Auth.currentAuthenticatedUser().then((userObj) => {
-          this.signedIn = true;
-          console.log(userObj);
-        });
-      } catch (err) {
-        this.signedIn = false;
-        console.log(err);
-        this.$router.push('/');
-      }
-    },
     async makeProfile() {
+      await this.$router.push('/Myprofile');
       try {
-        await this.$store.commit('setUserProfile', {
-          userName: this.loginUser.userName,
-          email: this.loginUser.email,
-          profileName: this.profileName,
-          goal: this.goal,
-          comment: this.comment,
-          image: this.avator,
-        });
         this.$store.dispatch('makeProfile', {
           profileName: this.profileName,
           goal: this.goal,
           comment: this.comment,
           image: this.avator,
         });
-        this.$router.push('Myprofile');
       } catch (error) {
         console.log(error);
       }

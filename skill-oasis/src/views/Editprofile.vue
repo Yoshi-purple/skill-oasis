@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid" style="height: 2160px">
-    <div class="container mt-5" style="max-width: 720px">
-      <div class="card text-center" style="padding: 0 30px">
+  <div class="container-fluid" style="min-height: 900px">
+    <div class="container" style="max-width: 720px">
+      <div class="card text-center">
         <div class="card-body" style="padding: 1rem 3rem">
           <p
             class="card-title fs-3 mb-5 w-100 mx-auto"
@@ -40,7 +40,8 @@
               <input
                 type="text"
                 class="form-control mb-3"
-                style="background-color: #eceeec; border: none"
+                style="background-color: #eceeec; border: none; height: auto"
+                rows="auto"
                 v-model="profileName"
               />
               <p class="mb-0" style="text-align: left">目標</p>
@@ -54,7 +55,7 @@
             </div>
           </div>
           <div class="row">
-            <p class="card-text-left fs-5 w-50">自己紹介</p>
+            <p class="card-text-left mt-3 fs-5 w-50">自己紹介</p>
             <textarea
               class="form-control"
               style="background-color: #eceeec; border: none"
@@ -83,7 +84,6 @@
   </div>
 </template>
 <script>
-// import axios from 'axios';
 import { mapGetters } from 'vuex';
 export default {
   data() {
@@ -123,19 +123,13 @@ export default {
 
     async sendEdit() {
       try {
-        await this.$store.dispatch('makeProfile', {
+        this.$store.dispatch('makeProfile', {
           profileName: this.profileName,
           goal: this.goal,
           comment: this.comment,
           image: this.newAvator,
         });
-        this.$store.commit('setUserProfile', {
-          profileName: this.profileName,
-          goal: this.goal,
-          comment: this.comment,
-          image: this.newAvator,
-        });
-        this.$router.push('Myprofile');
+        this.$router.push('/Myprofile');
       } catch (error) {
         console.log(error);
       }

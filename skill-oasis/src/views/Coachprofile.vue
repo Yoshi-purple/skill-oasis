@@ -2,16 +2,19 @@
   <div class="container-fluid" style="min-height: 1080px">
     <div class="container">
       <div class="row w-100 mt-3">
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-3 col-md-12 col-sm-12">
           <div class="card">
             <div class="card-body">
               <div class="row text-center">
                 <img
                   class="row img rounded-circle mx-auto px-0"
                   style="width: 120px; height: 120px; background-color: #ffffff"
-                  :src="this.user.image"
+                  :src="this.lesson.profile.image"
+                  @click="showUser()"
                 />
-                <p class="fs-3" style="color: #79b270">{{ this.user.profile_name }}</p>
+                <p class="fs-3" style="color: #79b270" @click="showUser()">
+                  {{ this.lesson.profile.profile_name }}
+                </p>
               </div>
               <div class="row fs-6">
                 <p>ステータス</p>
@@ -22,75 +25,107 @@
                     class="border"
                     style="background-color: #eceeec; text-align: center"
                   >
-                    <p>マッチング数:0<br />評価平均:4.6</p>
+                    <p>
+                      評価
+                      <StarRating
+                        class="d-flex justify-content-center"
+                        v-model="rating"
+                        v-bind:star-size="21"
+                        :increment="0.5"
+                        :read-only="true"
+                        :show-rating="false"
+                      ></StarRating>
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="row mx-auto">
                 <div class="col" style="margin: 0; padding: 0">
                   <p style="background-color: #eceeec; text-align: center">
-                    フォロー<br />1
+                    フォロー<br />{{ this.lesson.followies }}
                   </p>
                 </div>
                 <div class="col" style="margin: 0; padding: 0">
                   <p style="background-color: #eceeec; text-align: center">
-                    フォロワー<br />3
+                    フォロワー<br />{{ this.lesson.followers }}
                   </p>
                 </div>
               </div>
-              <div class="row mx-auto">
+              <div class="row mx-auto mb-1">
                 <button
+                  v-if="this.joinedRoomId != ''"
                   class="btn text-light"
-                  style="background-color: #79b270"
+                  style="background-color: #79b270; border-radius: 50px"
+                  @click="toMessageBox"
+                >
+                  メッセージBOXへ
+                </button>
+                <button
+                  v-if="this.joinedRoomId == ''"
+                  class="btn text-light"
+                  style="background-color: #79b270; border-radius: 50px"
                   @click="openModal"
                 >
                   メッセージを送信
                 </button>
               </div>
               <div class="row mx-auto">
-                <button class="btn text-light" style="background-color: #efa472">
+                <button
+                  v-if="this.followState == false"
+                  class="btn text-light"
+                  style="background-color: #efa472; border-radius: 50px"
+                  @click="doFollow()"
+                >
                   フォローする
+                </button>
+                <button
+                  v-if="this.followState == true"
+                  class="btn text-light"
+                  style="background-color: #efa472; opacity: 0.6; border-radius: 50px"
+                  @click="unFollow()"
+                >
+                  フォロー中
                 </button>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-9 col-md-6 col-sm-12">
+        <div class="col-lg-9 col-md-12 col-sm-12">
           <div class="card">
             <div class="card-body">
               <div class="gx-3 mx-auto">
-                <p>レッスンタイトル</p>
+                <!-- <p>レッスンタイトル</p> -->
                 <div
                   class="gx-3 mx-auto mb-3"
-                  style="max-width: 100%; height: 100px; background-color: #eceeec"
+                  style="max-width: 100%; height: auto; background-color: #fff"
                 >
-                  <div class="p-1">{{ this.lesson.lesson_title }}</div>
+                  <div class="p-1 card-title">
+                    <h5 style="font-weight: bold">
+                      {{ this.lesson.lessonData.lessonTitle }}
+                    </h5>
+                  </div>
                 </div>
-                <div class="row text-center mx-auto"></div>
-                <div class="row g-1">
-                  <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="row gx-0 card">
+                  <div class="card-img">
                     <img
-                      class="img"
-                      style="height: 300px; background-color: #eceeec"
-                      :src="this.lesson.image"
+                      class="img-fluid w-100 h-100"
+                      style="background-color: #eceeec"
+                      :src="this.lesson.lessonData.image"
                     />
                   </div>
                 </div>
               </div>
               <div class="row gx-3 mt-3">
                 <div>
-                  <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                      <a class="nav-link fs-5" aria-current="page" href="#">自己紹介</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link fs-5" href="#">レビュー</a>
-                    </li>
-                  </ul>
+                  <h5 class="nav-link fs-5 text-secondary" aria-current="page" href="#">
+                    レッスン紹介
+                  </h5>
                 </div>
-                <div class="tab-content" id="myTabContent">
-                  <div style="background-color: #eceeec; height: 300px" class="p-1">
-                    {{ this.lesson.lesson_detail }}
+                <div class="" id="myTabContent">
+                  <div style="background-color: #eceeec; height: auto" class="p-1">
+                    <p>
+                      {{ this.lesson.lessonData.introduce }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -99,39 +134,96 @@
         </div>
       </div>
     </div>
-    <MessageModal
+    <MessagetocoachModal
       v-if="this.modalStatus === true"
       @close="closeModal"
       :user="user"
-    ></MessageModal>
+    ></MessagetocoachModal>
   </div>
 </template>
 <script>
-import MessageModal from '../components/Messagemodal.vue';
+import MessagetocoachModal from '../modals/Messagetocoachmodal.vue';
+import StarRating from 'vue-star-rating';
+
 import { mapGetters } from 'vuex';
 export default {
   components: {
-    MessageModal,
+    MessagetocoachModal,
+    StarRating,
   },
   data() {
     return {
       lesson: this.$route.query.lesson,
-      user: this.$route.query.user[0],
+      user: '',
       modalStatus: false,
+      rating: 0,
+      joinedRoomId: '',
+      followState: false,
     };
   },
   computed: {
     ...mapGetters(['userProfile']),
   },
   mounted() {
-    console.log(this.lesson);
+    this.user = this.lesson;
+    this.rating = this.user.rate;
+    this.joinedRoomId = this.user.joinedRoom.id;
+    this.followState = this.user.followState;
   },
+
   methods: {
     openModal() {
-      this.modalStatus = true;
+      if (
+        this.$store.getters.userProfile.uid === this.user.lessonData.coachingUser.ref.id
+      ) {
+        alert('自分のアカウントです');
+      } else if (this.$store.state.authState === false) {
+        this.$router.push('Recommendsignin');
+      } else {
+        this.modalStatus = true;
+      }
     },
     closeModal() {
       this.modalStatus = false;
+    },
+    doFollow() {
+      if (
+        this.$store.getters.userProfile.uid === this.user.lessonData.coachingUser.ref.id
+      ) {
+        alert('自分のアカウントです');
+      } else if (this.$store.state.authState === false) {
+        this.$router.push('Recommendsignin');
+      } else {
+        try {
+          this.$store.dispatch('doFollow', {
+            targetUserId: this.user.lessonData.coachingUser.ref.id,
+          });
+          this.followState = true;
+        } catch (error) {
+          return;
+        }
+      }
+    },
+    unFollow() {
+      try {
+        this.$store.dispatch('unFollow', {
+          targetUserId: this.user.lessonData.coachingUser.ref.id,
+        });
+        this.followState = false;
+      } catch (error) {
+        return;
+      }
+    },
+    toMessageBox() {
+      this.$router.push('Messagebox');
+    },
+    showUser() {
+      this.$router.push({
+        path: '/Userpage',
+        query: { user: this.user.profile, uid: this.user.lessonData.coachingUser.id },
+      });
+      this.$store.dispatch('getTargetLessons', this.user.lessonData.coachingUser.id);
+      this.$store.dispatch('getTargetUserStatus', this.user.lessonData.coachingUser.id);
     },
   },
 };

@@ -45,9 +45,6 @@
   </div>
 </template>
 <script>
-import { Auth } from 'aws-amplify';
-import { AmplifyEventBus } from 'aws-amplify-vue';
-
 import { mapGetters } from 'vuex';
 
 export default {
@@ -63,54 +60,8 @@ export default {
   computed: {
     ...mapGetters(['authState', 'loginUser']),
   },
-  created() {
-    this.isUserSignedIn();
-    AmplifyEventBus.$on('authState', (info) => {
-      if (info === 'signedIn') {
-        this.isUserSignedIn();
-      } else {
-        this.signedIn = false;
-      }
-    });
-  },
-  methods: {
-    async isUserSignedIn() {
-      try {
-        const userObj = await Auth.currentAuthenticatedUser();
-        this.signedIn = true;
-        this.$store.commit('setLoginUser', {
-          userName: userObj.username,
-          email: userObj.attributes.email,
-        });
-        console.log(userObj);
-        if (userObj.attributes.email_verified) {
-          this.$router.push('Makeprofile');
-        } else {
-          return;
-        }
-        console.log(this.loginUser);
-      } catch (err) {
-        this.signedIn = false;
-        console.log(err);
-      }
-    },
-    async confirmSignUp() {
-      try {
-        const user = await Auth.confirmSignUp(this.username, this.code);
-        console.log(user);
-        await Auth.signIn(this.email, this.password).then((user) => {
-          this.signedIn = true;
-          this.$store.commit('setLoginUser', {
-            userName: user.username,
-            email: user.attributes.email,
-          });
-          this.$router.push({ path: '/Makeprofile' });
-        });
-      } catch (error) {
-        console.log('error confirming sign up', error);
-      }
-    },
-  },
+  created() {},
+  methods: {},
 };
 </script>
 <style>

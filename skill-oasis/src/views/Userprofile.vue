@@ -9,39 +9,72 @@
                 <img
                   class="row img rounded-circle px-0 mx-auto"
                   style="width: 120px; height: 120px; background-color: #ffffff"
-                  :src="this.card.image"
+                  :src="this.card.profile.image"
                 />
                 <p class="text-nowrap fs-3" style="color: #79b270">
-                  {{ this.card.profile_name }}
+                  {{ this.card.profile.profile_name }}
                 </p>
               </div>
-              <div class="row fs-6">
-                <p>ステータス</p>
-              </div>
+              <div class="fs-6">ステータス</div>
               <div class="row">
                 <div class="col">
                   <div
                     class="border"
                     style="background-color: #eceeec; text-align: center"
                   >
-                    <p>マッチング数:0<br />評価平均:4.6</p>
+                    <p>
+                      評価
+                      <StarRating
+                        class="d-flex justify-content-center"
+                        v-model="rating"
+                        v-bind:star-size="21"
+                        :increment="0.5"
+                        :read-only="true"
+                        :show-rating="false"
+                      ></StarRating>
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="row mx-auto">
                 <div class="col" style="margin: 0; padding: 0">
                   <p style="background-color: #eceeec; text-align: center">
-                    フォロー<br />1
+                    フォロー<br />{{ this.card.followies }}
                   </p>
                 </div>
                 <div class="col" style="margin: 0; padding: 0">
                   <p style="background-color: #eceeec; text-align: center">
-                    フォロワー<br />3
+                    フォロワー<br />{{ this.card.followers }}
                   </p>
                 </div>
               </div>
+              <div>目標</div>
+              <div class="row mx-auto">
+                <div class="col" style="margin: 0; padding: 0">
+                  <p style="background-color: #eceeec">
+                    {{ this.card.profile.goal }}
+                  </p>
+                </div>
+              </div>
+              <!-- <div>自己紹介</div>
+              <div class="row mx-auto">
+                <div class="col" style="margin: 0; padding: 0">
+                  <p style="background-color: #eceeec; min-height: 180px">
+                    {{ this.card.profile.introduce }}
+                  </p>
+                </div>
+              </div> -->
               <div class="row mx-auto">
                 <button
+                  v-if="this.joinedRoomId != ''"
+                  class="btn text-light"
+                  style="background-color: #79b270"
+                  @click="toMessageBox"
+                >
+                  メッセージBOXへ
+                </button>
+                <button
+                  v-if="this.joinedRoomId == ''"
                   class="btn text-light"
                   style="background-color: #79b270"
                   @click="openModal(card)"
@@ -50,8 +83,21 @@
                 </button>
               </div>
               <div class="row mx-auto">
-                <button class="btn text-light" style="background-color: #efa472">
+                <button
+                  v-if="this.followState === false"
+                  class="btn text-light"
+                  style="background-color: #efa472"
+                  @click="doFollow()"
+                >
                   フォローする
+                </button>
+                <button
+                  v-if="this.followState === true"
+                  class="btn text-light"
+                  style="background-color: #efa472; opacity: 0.6"
+                  @click="unFollow()"
+                >
+                  フォロー中
                 </button>
               </div>
             </div>
@@ -61,18 +107,17 @@
           <div class="card">
             <div class="card-body">
               <div class="row mx-auto">
-                <p>募集内容</p>
-                <div
-                  class="img-fluid mx-auto p-1"
-                  style="max-width: 100%; height: 36px; background-color: #eceeec"
-                >
-                  {{ this.card.recruit_title }}
+                <!-- <p>募集内容</p> -->
+                <div class="img-fluid mx-auto p-1" style="max-width: 100%; height: auto">
+                  <h5 style="font-weight: bold">
+                    {{ this.card.recruitsData.title }}
+                  </h5>
                 </div>
                 <div
                   class="img-fluid mx-auto mt-1 p-1"
                   style="max-width: 100%; height: 200px; background-color: #eceeec"
                 >
-                  {{ this.card.cardtext }}
+                  {{ this.card.recruitsData.comment }}
                 </div>
               </div>
 
@@ -82,14 +127,11 @@
                     <li class="nav-item">
                       <a class="nav-link fs-5" aria-current="page" href="#">自己紹介</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link fs-5" href="#">レビュー</a>
-                    </li>
                   </ul>
                 </div>
                 <div class="tab-content" id="myTabContent">
-                  <div class="p-1" style="background-color: #eceeec; height: 300px">
-                    {{ this.card.comment }}
+                  <div class="p-1" style="background-color: #eceeec; min-height: 300px">
+                    {{ this.card.profile.introduce }}
                   </div>
                 </div>
               </div>
@@ -101,29 +143,80 @@
     <MessageModal
       v-if="this.modalStatus === true"
       @close="closeModal"
-      :user="card"
+      :user="user"
     ></MessageModal>
   </div>
 </template>
 <script>
-import MessageModal from '../components/Messagemodal.vue';
+import MessageModal from '../modals/Messagemodal.vue';
+import StarRating from 'vue-star-rating';
+
 export default {
   components: {
     MessageModal,
+    StarRating,
   },
   data() {
     return {
       modalStatus: false,
       card: this.$route.query.card,
+      user: '',
+      rating: 0,
+      joinedRoomId: '',
+      followState: false,
     };
   },
-  mounted() {},
+  mounted() {
+    this.user = this.card;
+    this.rating = this.card.rate;
+    this.joinedRoomId = this.user.joinedRoom.id;
+    this.followState = this.card.followState;
+  },
   methods: {
     openModal() {
-      this.modalStatus = true;
+      if (
+        this.$store.getters.userProfile.uid === this.user.recruitsData.recruitUser.ref.id
+      ) {
+        alert('自分のアカウントです');
+      } else if (this.$store.state.authState === false) {
+        this.$router.push('/');
+      } else {
+        this.modalStatus = true;
+      }
     },
     closeModal() {
       this.modalStatus = false;
+    },
+    toMessageBox() {
+      this.$router.push('Messagebox');
+    },
+    doFollow() {
+      if (
+        this.$store.getters.userProfile.uid === this.user.recruitsData.recruitUser.ref.id
+      ) {
+        alert('自分のアカウントです');
+      } else if (this.$store.state.authState === false) {
+        this.$router.push('/');
+      } else {
+        try {
+          this.$store.dispatch('doFollow', {
+            targetUserId: this.user.recruitsData.recruitUser.ref.id,
+          });
+          this.followState = true;
+        } catch (error) {
+          return;
+        }
+      }
+    },
+    unFollow() {
+      try {
+        this.$store.dispatch('unFollow', {
+          targetUserId: this.user.recruitsData.recruitUser.ref.id,
+        });
+        this.followState = false;
+      } catch (error) {
+        return;
+      }
     },
   },
 };

@@ -14,6 +14,10 @@ import Makereqruitcard from '../views/Makereqruitcard.vue';
 import Userprofile from '../views/Userprofile.vue';
 import Coachprofile from '../views/Coachprofile.vue';
 import Confirmsignup from '../views/Confirmsignup.vue';
+import Sentmessage from '../views/Sentmessage.vue';
+import Userpage from '../views/Userpage.vue';
+import Search from '../views/Search.vue';
+import Recommendsignin from '../views/Recommendsignin';
 
 Vue.use (VueRouter);
 
@@ -87,6 +91,26 @@ const routes = [
     path: '/Confirmsignup',
     name: 'Confirmsignup',
     component: Confirmsignup,
+  },
+  {
+    path: '/Sentmessage',
+    name: 'Sentmessage',
+    component: Sentmessage,
+  },
+  {
+    path: '/Userpage',
+    name: 'Userpage',
+    component: Userpage,
+  },
+  {
+    path: '/Search',
+    name: 'Search',
+    component: Search,
+  },
+  {
+    path: '/Recommendsignin',
+    name: 'Recommendsignin',
+    component: Recommendsignin,
   },
 ];
 
