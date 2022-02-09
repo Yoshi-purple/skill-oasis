@@ -50,13 +50,17 @@ export default {
     };
   },
   methods: {
-    async makeRecruitCard() {
-      console.log(this.comment);
-      this.$store.dispatch('makeRecruitment', {
-        comment: this.comment,
-        title: this.title,
-      });
-      await this.$router.push('/Mypage');
+    makeRecruitCard() {
+      try {
+        console.log(this.comment);
+        this.$store.dispatch('makeRecruitment', {
+          comment: this.comment,
+          title: this.title,
+        });
+        this.$router.push('/Myprofile');
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

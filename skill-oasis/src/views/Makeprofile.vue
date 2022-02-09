@@ -2,7 +2,7 @@
   <div class="container-fluid" style="height: 1440px">
     <div style="background-color: #79b270">
       <p class="fs-3" style="color: #ffffff; text-align: center; padding: 15px">
-        登録が完了しました。ようこそ、{{ loginUser.userName }}さん。
+        登録が完了しました。ようこそ、{{ loginUser.username }}さん。
       </p>
     </div>
     <div class="container" style="max-width: 720px; height: 873px">
@@ -47,7 +47,7 @@
                 type="text"
                 class="form-control mb-3"
                 style="background-color: #eceeec; border: none"
-                placeholder="例:あんぱん食べたい人"
+                placeholder="例:gamer01"
               />
               <p class="mb-0" style="text-align: left">目標</p>
               <input
@@ -55,7 +55,7 @@
                 type="text"
                 class="form-control"
                 style="background-color: #eceeec; border: none"
-                placeholder="例:大会に出れるレベルまで行きたいです"
+                placeholder="例:上手くなって配信したい"
               />
             </div>
           </div>
@@ -129,22 +129,14 @@ export default {
         });
     },
     async makeProfile() {
+      await this.$router.push('/Myprofile');
       try {
-        await this.$store.commit('setUserProfile', {
-          userName: this.loginUser.userName,
-          email: this.loginUser.email,
-          profileName: this.profileName,
-          goal: this.goal,
-          comment: this.comment,
-          image: this.avator,
-        });
         this.$store.dispatch('makeProfile', {
           profileName: this.profileName,
           goal: this.goal,
           comment: this.comment,
           image: this.avator,
         });
-        this.$router.push('Myprofile');
       } catch (error) {
         console.log(error);
       }

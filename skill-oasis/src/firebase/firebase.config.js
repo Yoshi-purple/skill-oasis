@@ -1,17 +1,18 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from 'firebase/app';
+import {getStorage} from 'firebase/storage';
 import {getAuth} from 'firebase/auth';
 import {getAnalytics} from 'firebase/analytics';
 import {getFirestore} from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAn8Idao2-UCconCtgeL1MlFof52cSRYU8',
-  authDomain: 'skill-oasis.firebaseapp.com',
-  projectId: 'skill-oasis',
-  storageBucket: 'skill-oasis.appspot.com',
-  messagingSenderId: '462483035736',
-  appId: '1:462483035736:web:776fba4482528bb38a1c2d',
-  measurementId: 'G-JMKFEYR9C1',
+  apiKey: process.env.VUE_APP_APP_API,
+  authDomain: process.env.VUE_APP_AUTHDOMAIN,
+  projectId: process.env.VUE_APP_PROJECTID,
+  storageBucket: process.env.VUE_APP_STORAGEBUCKET,
+  messagingSenderId: process.env.VUE_APP_MESSAGINGSENDERID,
+  appId: process.env.VUE_APP_APPID,
+  measurementId: process.env.VUE_APP_MEASUREMENTId,
 };
 
 // Initialize Firebase
@@ -19,3 +20,4 @@ const app = initializeApp (firebaseConfig);
 export const analytics = getAnalytics (app);
 export const auth = getAuth (app);
 export const db = getFirestore (app);
+export const storage = getStorage (app);

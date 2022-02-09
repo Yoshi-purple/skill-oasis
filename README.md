@@ -12,7 +12,4 @@ docker-compose build
 docker-compose up -d
 ```
 
-## migration
-```
-db-migrate up
-```
+
