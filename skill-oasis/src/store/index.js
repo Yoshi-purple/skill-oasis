@@ -324,6 +324,9 @@ export default new Vuex.Store ({
     },
     setMessages (state, data) {
       state.messages.push (data);
+      state.messages.sort ((a, b) => {
+        return b.data.createdAt - a.data.createdAt;
+      });
     },
     cleanMessages (state) {
       state.messages.length = 0;
@@ -1166,7 +1169,7 @@ export default new Vuex.Store ({
       });
     },
     //ルーム内のメッセージを取得
-    async getMessages ({commit}, {roomId}) {
+    getMessages ({commit}, {roomId}) {
       const db = getFirestore ();
       const messageRef = query (
         collection (db, 'rooms', `${roomId}`, 'messages'),
@@ -1175,21 +1178,24 @@ export default new Vuex.Store ({
       onSnapshot (messageRef, messageSnapshot => {
         commit ('cleanMessages');
         messageSnapshot.forEach (async doc => {
-          const sendUser = await getDoc (doc.data ().sendUser.ref);
-          const messageData = {
-            data: doc.data (),
-            year: doc.data ().createdAt.toDate ().getFullYear (),
-            month: doc.data ().createdAt.toDate ().getMonth () + 1,
-            date: ('0' + doc.data ().createdAt.toDate ().getDate ()).slice (-2),
-            hours: ('0' + doc.data ().createdAt.toDate ().getHours ()).slice (
-              -2
-            ),
-            minutes: ('0' +
-              doc.data ().createdAt.toDate ().getMinutes ()).slice (-2),
-            id: doc.id,
-            sendUser: sendUser.data (),
-          };
-          commit ('setMessages', messageData);
+          getDoc (doc.data ().sendUser.ref).then (user => {
+            const messageData = {
+              data: doc.data (),
+              year: doc.data ().createdAt.toDate ().getFullYear (),
+              month: doc.data ().createdAt.toDate ().getMonth () + 1,
+              date: ('0' + doc.data ().createdAt.toDate ().getDate ()).slice (
+                -2
+              ),
+              hours: ('0' + doc.data ().createdAt.toDate ().getHours ()).slice (
+                -2
+              ),
+              minutes: ('0' +
+                doc.data ().createdAt.toDate ().getMinutes ()).slice (-2),
+              id: doc.id,
+              sendUser: user.data (),
+            };
+            commit ('setMessages', messageData);
+          });
         });
       });
     },

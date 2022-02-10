@@ -35,7 +35,6 @@ export default {
   },
   mounted() {
     this.$store.commit('cleanMessages');
-    console.log(this.rooms);
   },
   created() {},
 };
