@@ -6,14 +6,16 @@
           v-if="message.sendUser.image === 'null'"
           class="img rounded-circle"
           style="width: 30px; height: 30px; background-color: #eceeec"
+          @click="showUser"
         />
         <img
           class="img rounded-circle"
           style="width: 30px; height: 30px; background-color: #eceeec"
           :src="message.sendUser.image"
+          @click="showUser"
         />
         <div class="col-8 mx-2">
-          <p class="fs-4" style="color: #79b270">
+          <p class="fs-4" style="color: #79b270" @click="showUser">
             {{ message.sendUser.profile_name }}
           </p>
         </div>
@@ -35,6 +37,15 @@
 <script>
 export default {
   props: ['message', 'index'],
-  methods: {},
+  methods: {
+    showUser() {
+      this.$router.push({
+        path: '/Userpage',
+        query: { user: this.message.sendUser, uid: this.message.data.sendUser.ref.id },
+      });
+      this.$store.dispatch('getTargetLessons', this.message.data.sendUser.ref.id);
+      this.$store.dispatch('getTargetUserStatus', this.message.data.sendUser.ref.id);
+    },
+  },
 };
 </script>
