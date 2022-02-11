@@ -430,8 +430,7 @@ export default new Vuex.Store ({
     //メールアドレス認証ログイン
     async logIn ({commit}, {email}) {
       const actionCodeSettings = {
-        url: 'http://localhost:8080/Mypage',
-        // url: 'https://skill-oasis.firebaseapp.com',
+        url: 'https://skill-oasis.web.app/Mypage',
         handleCodeInApp: true,
       };
       const auth = getAuth ();
