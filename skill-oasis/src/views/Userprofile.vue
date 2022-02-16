@@ -10,8 +10,9 @@
                   class="row img rounded-circle px-0 mx-auto"
                   style="width: 120px; height: 120px; background-color: #ffffff"
                   :src="this.card.profile.image"
+                  @click="showUser()"
                 />
-                <p class="text-nowrap fs-3" style="color: #79b270">
+                <p class="text-nowrap fs-3" style="color: #79b270" @click="showUser()">
                   {{ this.card.profile.profile_name }}
                 </p>
               </div>
@@ -56,19 +57,11 @@
                   </p>
                 </div>
               </div>
-              <!-- <div>自己紹介</div>
-              <div class="row mx-auto">
-                <div class="col" style="margin: 0; padding: 0">
-                  <p style="background-color: #eceeec; min-height: 180px">
-                    {{ this.card.profile.introduce }}
-                  </p>
-                </div>
-              </div> -->
               <div class="row mx-auto">
                 <button
                   v-if="this.joinedRoomId != ''"
                   class="btn text-light"
-                  style="background-color: #79b270"
+                  style="background-color: #79b270; border-radius: 50px"
                   @click="toMessageBox"
                 >
                   メッセージBOXへ
@@ -76,17 +69,17 @@
                 <button
                   v-if="this.joinedRoomId == ''"
                   class="btn text-light"
-                  style="background-color: #79b270"
+                  style="background-color: #79b270; border-radius: 50px"
                   @click="openModal(card)"
                 >
                   メッセージを送信
                 </button>
               </div>
-              <div class="row mx-auto">
+              <div class="row mx-auto mt-1">
                 <button
                   v-if="this.followState === false"
                   class="btn text-light"
-                  style="background-color: #efa472"
+                  style="background-color: #efa472; border-radius: 50px"
                   @click="doFollow()"
                 >
                   フォローする
@@ -94,7 +87,7 @@
                 <button
                   v-if="this.followState === true"
                   class="btn text-light"
-                  style="background-color: #efa472; opacity: 0.6"
+                  style="background-color: #efa472; opacity: 0.6; border-radius: 50px"
                   @click="unFollow()"
                 >
                   フォロー中
@@ -217,6 +210,14 @@ export default {
       } catch (error) {
         return;
       }
+    },
+    showUser() {
+      this.$router.push({
+        path: '/Userpage',
+        query: { user: this.user.profile, uid: this.user.recruitsData.recruitUser.id },
+      });
+      this.$store.dispatch('getTargetLessons', this.user.recruitsData.recruitUser.id);
+      this.$store.dispatch('getTargetUserStatus', this.user.recruitsData.recruitUser.id);
     },
   },
 };

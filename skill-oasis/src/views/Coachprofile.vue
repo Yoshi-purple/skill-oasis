@@ -91,14 +91,11 @@
           </div>
         </div>
         <div class="col-lg-9 col-md-12 col-sm-12">
-          <div class="card">
-            <div class="card-body">
+          <div style="background-color: #eceeec">
+            <div class="card-body" style="background-color: #ffffff">
               <div class="gx-3 mx-auto">
                 <!-- <p>レッスンタイトル</p> -->
-                <div
-                  class="gx-3 mx-auto mb-3"
-                  style="max-width: 100%; height: auto; background-color: #fff"
-                >
+                <div class="gx-3 mx-auto mb-3" style="max-width: 100%; height: auto">
                   <div class="p-1 card-title">
                     <h5 style="font-weight: bold">
                       {{ this.lesson.lessonData.lessonTitle }}
@@ -122,7 +119,7 @@
                   </h5>
                 </div>
                 <div class="" id="myTabContent">
-                  <div style="background-color: #eceeec; height: auto" class="p-1">
+                  <div style="height: auto" class="p-1">
                     <p>
                       {{ this.lesson.lessonData.introduce }}
                     </p>
@@ -166,6 +163,7 @@ export default {
   },
   mounted() {
     this.user = this.lesson;
+    console.log(this.user)
     this.rating = this.user.rate;
     this.joinedRoomId = this.user.joinedRoom.id;
     this.followState = this.user.followState;
